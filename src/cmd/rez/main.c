@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,18 +17,12 @@ void usage(const char *program) {
 }
 
 int main(int argc, const char **argv) {
-    bool list_tasks = false,
-         reload = false,
+    bool reload = false,
          debug = false;
 
     int i;
     for (i = 1; i < argc; i++) {
         const char *arg = argv[i];
-
-        if (strcmp(arg, "-l") == 0) {
-            list_tasks = true;
-            continue;
-        }
 
         if (strcmp(arg, "-r") == 0) {
             reload = true;
@@ -52,32 +47,43 @@ int main(int argc, const char **argv) {
         break;
     }
 
-    // const int task_len = argc - i;
-    // const char **tasks = argv + i;
+    // const char **rest = argv + i;
 
-    if (list_tasks) {
-        fprintf(stderr, "unimplemented");
-        return EXIT_FAILURE;
+    char *rez_path = REZ_FILE_CPP;
+
+    int status = rez_file_status(REZ_FILE_CPP);
+
+    if (status != 0) {
+        if (status != ENOENT) {
+            fprintf(stderr, "unable to query file path: %s\n", REZ_FILE_CPP);
+            return EXIT_FAILURE;
+        }
+
+        status = rez_file_status(REZ_FILE_C);
+
+        switch (status) {
+        case 0:
+            rez_path = REZ_FILE_C;
+            break;
+        case ENOENT:
+            fprintf(stderr, "missing rez file rez.c[pp]\n");
+            return EXIT_FAILURE;
+        default:
+            fprintf(stderr, "unable to query file path: %s\n", REZ_FILE_C);
+            return EXIT_FAILURE;
+        }
     }
 
-    char *compiler = REZ_DEFAULT_UNIX_COMPILER;
+    char *compiler = REZ_DEFAULT_COMPILER_UNIX_CPP;
+
+    if (strcmp(rez_path, REZ_FILE_C) == 0) {
+        compiler = REZ_DEFAULT_COMPILER_UNIX_C;
+    }
 
     bool windows = getenv(REZ_COMSPEC_ENV_VAR) != NULL;
 
     if (windows) {
-        compiler = REZ_DEFAULT_WINDOWS_COMPILER;
-    }
-
-    char *compiler_override = getenv(REZ_COMPILER_CPP_ENV_VAR);
-
-    if (compiler_override != NULL) {
-        compiler = compiler_override;
-    } else {
-        compiler_override = getenv(REZ_COMPILER_C_ENV_VAR);
-
-        if (compiler_override != NULL) {
-            compiler = compiler_override;
-        }
+        compiler = REZ_DEFAULT_COMPILER_WINDOWS;
     }
 
     if (debug) {

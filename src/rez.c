@@ -14,11 +14,20 @@
 
 #include "rez/rez.h"
 
-int rez_load_msvc(bool reload) {
+int rez_file_status(const char *path) {
     struct stat buffer;
 
     errno = 0;
-    bool cache_exists = stat(REZ_CACHE_FILENAME, &buffer) == 0;
+    if (stat(path, &buffer) != 0) {
+        return errno;
+    }
+
+    return 0;
+}
+
+int rez_load_msvc(bool reload) {
+    int cache_status = rez_file_status(REZ_CACHE_FILENAME);
+    bool cache_exists = cache_status == 0;
 
     if (!cache_exists && errno != ENOENT) {
         fprintf(stderr, "unable to query file path: %s\n", REZ_CACHE_FILENAME);
