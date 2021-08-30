@@ -74,16 +74,36 @@ int main(int argc, const char **argv) {
         }
     }
 
-    char *compiler = REZ_DEFAULT_COMPILER_UNIX_CPP;
-
-    if (strcmp(rez_path, REZ_FILE_C) == 0) {
-        compiler = REZ_DEFAULT_COMPILER_UNIX_C;
+    if (debug) {
+        fprintf(stderr, "rez file: %s\n", rez_path);
     }
 
-    bool windows = getenv(REZ_COMSPEC_ENV_VAR) != NULL;
+    bool windows = rez_is_windows();
+
+    if (debug) {
+        fprintf(stderr, "windows: %d\n", windows);
+    }
+
+    char *compiler = REZ_DEFAULT_COMPILER_UNIX_CPP;
 
     if (windows) {
         compiler = REZ_DEFAULT_COMPILER_WINDOWS;
+    }
+
+    char *compiler_override = NULL;
+
+    if (strcmp(rez_path, REZ_FILE_CPP) == 0) {
+        compiler_override = getenv(REZ_COMPILER_ENV_VAR_CPP);
+    } else if (strcmp(rez_path, REZ_FILE_C) == 0) {
+        if (!windows) {
+            compiler = REZ_DEFAULT_COMPILER_UNIX_C;
+        }
+
+        compiler_override = getenv(REZ_COMPILER_ENV_VAR_C);
+    }
+
+    if (compiler_override != NULL) {
+        compiler = compiler_override;
     }
 
     if (debug) {
@@ -94,6 +114,10 @@ int main(int argc, const char **argv) {
         fprintf(stderr, "error loading msvc\n");
         return EXIT_FAILURE;
     }
+
+    char command[1024] = { 0 };
+    strcat(command, compiler);
+    strcat(command, " ");
 
     // ...
 

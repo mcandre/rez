@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 #if defined(_MSC_VER)
-#define popen _popen
 #define pclose _pclose
+#define popen _popen
 #endif
 
 #include <stdbool.h>
@@ -25,6 +25,10 @@ int rez_file_status(const char *path) {
     return 0;
 }
 
+bool rez_is_windows() {
+    return getenv(REZ_COMSPEC_ENV_VAR) != NULL;
+}
+
 int rez_load_msvc(bool reload) {
     int cache_status = rez_file_status(REZ_CACHE_FILENAME);
     bool cache_exists = cache_status == 0;
@@ -35,9 +39,11 @@ int rez_load_msvc(bool reload) {
     }
 
     FILE *cache;
-    char line[REZ_WINDOWS_MAX_ENV_BLOCK];
+    char line[REZ_MAX_ENV_BLOCK];
 
     if (reload || !cache_exists) {
+        fprintf(stderr, "updating toolchain cache...\n");
+
         char command[1024];
 
         int result = sprintf(
@@ -97,7 +103,11 @@ int rez_load_msvc(bool reload) {
         // chomp
         line[strcspn(line, "\n")] = '\0';
 
+#if defined(_MSC_VER)
+        if (_putenv(line) != 0) {
+#else
         if (putenv(line) != 0) {
+#endif
             fprintf(stderr, "error applying environment variable key=value pair: %s\n", line);
             return -1;
         }
