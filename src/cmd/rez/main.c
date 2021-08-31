@@ -10,32 +10,35 @@ void usage(const char *program) {
     fprintf(stderr, "usage: %s [OPTION] [<task> [<task> [<task>...]]]\n\n", program);
 
     fprintf(stderr, "-l\tList available tasks\n");
-    fprintf(stderr, "-r\tForce reload cache\n");
+    fprintf(stderr, "-c\tClean rez caches\n");
     fprintf(stderr, "-d\tEnable debugging information\n");
     fprintf(stderr, "-v\tShow version information\n");
     fprintf(stderr, "-h\tShow usage information\n");
 }
 
+void banner(void) {
+    printf("rez %s\n", REZ_VERSION);
+}
+
 int main(int argc, const char **argv) {
-    bool reload = false,
-         debug = false;
+    rez_config config = { 0 };
 
     int i;
     for (i = 1; i < argc; i++) {
         const char *arg = argv[i];
 
-        if (strcmp(arg, "-r") == 0) {
-            reload = true;
-            continue;
+        if (strcmp(arg, "-c") == 0) {
+            fprintf(stderr, "unimplemented\n");
+            return EXIT_FAILURE;
         }
 
         if (strcmp(arg, "-d") == 0) {
-            debug = true;
+            config.debug = true;
             continue;
         }
 
         if (strcmp(arg, "-v") == 0) {
-            printf("rez %s\n", REZ_VERSION);
+            banner();
             return EXIT_SUCCESS;
         }
 
@@ -49,74 +52,17 @@ int main(int argc, const char **argv) {
 
     // const char **rest = argv + i;
 
-    char *rez_path = REZ_FILE_CPP;
-
-    int status = rez_file_status(REZ_FILE_CPP);
-
-    if (status != 0) {
-        if (status != ENOENT) {
-            fprintf(stderr, "unable to query file path: %s\n", REZ_FILE_CPP);
-            return EXIT_FAILURE;
-        }
-
-        status = rez_file_status(REZ_FILE_C);
-
-        switch (status) {
-        case 0:
-            rez_path = REZ_FILE_C;
-            break;
-        case ENOENT:
-            fprintf(stderr, "missing rez file rez.c[pp]\n");
-            return EXIT_FAILURE;
-        default:
-            fprintf(stderr, "unable to query file path: %s\n", REZ_FILE_C);
-            return EXIT_FAILURE;
-        }
-    }
-
-    if (debug) {
-        fprintf(stderr, "rez file: %s\n", rez_path);
-    }
-
-    bool windows = rez_is_windows();
-
-    if (debug) {
-        fprintf(stderr, "windows: %d\n", windows);
-    }
-
-    char *compiler = REZ_DEFAULT_COMPILER_UNIX_CPP;
-
-    if (windows) {
-        compiler = REZ_DEFAULT_COMPILER_WINDOWS;
-    }
-
-    char *compiler_override = NULL;
-
-    if (strcmp(rez_path, REZ_FILE_CPP) == 0) {
-        compiler_override = getenv(REZ_COMPILER_ENV_VAR_CPP);
-    } else if (strcmp(rez_path, REZ_FILE_C) == 0) {
-        if (!windows) {
-            compiler = REZ_DEFAULT_COMPILER_UNIX_C;
-        }
-
-        compiler_override = getenv(REZ_COMPILER_ENV_VAR_C);
-    }
-
-    if (compiler_override != NULL) {
-        compiler = compiler_override;
-    }
-
-    if (debug) {
-        fprintf(stderr, "compiler: %s\n", compiler);
-    }
-
-    if (windows && rez_load_msvc(reload) < 0) {
-        fprintf(stderr, "error loading msvc\n");
+    if (rez_load_config(&config) < 0) {
+        fprintf(stderr, "error loading config\n");
         return EXIT_FAILURE;
     }
 
+    if (config.debug) {
+        rez_dump_config(&config);
+    }
+
     char command[1024] = { 0 };
-    strcat(command, compiler);
+    strcat(command, config.compiler);
     strcat(command, " ");
 
     // ...
