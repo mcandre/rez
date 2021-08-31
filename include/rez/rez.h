@@ -36,7 +36,6 @@ typedef struct {
     char *rez_file;
     rez_lang_t rez_lang;
     char *compiler;
-    char *rez_artifact;
 } rez_config;
 
 void rez_dump_config(const rez_config *config);

@@ -16,15 +16,15 @@
 #include "rez/rez.h"
 
 void rez_dump_config(const rez_config *config) {
-    printf(
-        "{ debug: %d, windows: %d, msvc: %d, rez_file: %s, rez_lang: %d, compiler: %s, rez_artifact: %s }",
+    fprintf(
+        stderr,
+        "{ debug: %d, windows: %d, msvc: %d, rez_file: %s, rez_lang: %d, compiler: %s }\n",
         config->debug,
         config->windows,
         config->msvc,
         config->rez_file,
         config->rez_lang,
-        config->compiler,
-        config->rez_artifact
+        config->compiler
     );
 }
 

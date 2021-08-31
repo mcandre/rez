@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include "rez/rez.h"
 
@@ -61,9 +62,40 @@ int main(int argc, const char **argv) {
         rez_dump_config(&config);
     }
 
-    char command[1024] = { 0 };
-    strcat(command, config.compiler);
-    strcat(command, " ");
+    char artifact[1024] = { 0 };
+    rez_artifact(artifact, &config);
+
+    struct stat artifact_buffer;
+
+    errno = 0;
+    const int artifact_exists = stat(artifact, &artifact_buffer) == 0;
+
+    if (!artifact_exists) {
+        if (errno != ENOENT) {
+            fprintf(stderr, "unable to query artifact path %s. errno: %d\n", artifact, errno);
+            return EXIT_FAILURE;
+        }
+
+        char command[1024] = { 0 };
+        strcat(command, config.compiler);
+        strcat(command, " ");
+
+        if (config.msvc) {
+            // ...
+
+            strcat(command, "/link /out ");
+            strcat(command, artifact);
+        } else {
+            strcat(command, "-o ");
+            strcat(command, artifact);
+
+            // ...
+        }
+
+        fprintf(stderr, "running build command: %s\n", command);
+
+        // ...
+    }
 
     // ...
 
