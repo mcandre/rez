@@ -1,4 +1,4 @@
-# rez: a C/C++ task runner
+# rez: a C++ task runner
 
 ```text
  `_~----====-.
@@ -6,6 +6,15 @@
  /&( ``
  \3
 ```
+
+# SUMMARY
+
+rez processes C++ tasks.
+
+Where other runners depend on managing secondary DSL's, *rez* collapses the software stack. Application and build scripts: One programming language.
+
+* Minimize environment bloat.
+* Maximize expressiveness.
 
 # EXAMPLE
 
@@ -17,8 +26,32 @@ $ rez hello
 
 # ABOUT
 
-rez allows you to define build tasks directly as C/C++ code. This unlocks a deep level of customization for your application's development workflows, without having to rely on DSLs or other programming languages.
+rez observes a few particular pain points of software development:
+
+* Hidden bugs
+* Vendor locking
+
+In application code, these pain points are already managed with a variety of classic software techniques. For example, C++ illuminates many potential kinds of bugs and eliminate them at compile time. In terms of vendor locking, C++ documentation clarifies platform support. C++ features more predictable error handling semantics than shell scripts. And of course, C++ code runs faster than interpreted code.
+
+We want to bring this same rigor in applications, to build systems. For example, common shell-outs to `rm` / `del`... become `std::filesystem::remove_all`.
+
+rez simply wraps your desired build tasks; These can be underlying cmake/make/autotools/etc. commands. rez offers some zero conf defaults, but in general promotes flexibility with the rest of the C++ ecosystem.
+
+Retire junk files, *like tears in the rain...*
 
 # SEE ALSO
 
-* [Adam Savage's One Day Builds: Snub-Nosed Blade Runner Blasters!](https://www.youtube.com/watch?v=9XB4Be6TjHU)
+* [autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html), a preiminent GNU/Linux build system
+* [batsch](https://batsh.org/), a preprocessing language that compiles to bash and MS-DOS bat files (somewhat defunct)
+* [cmake](https://cmake.org/), a preiminent cross-platform build system
+* [dale](https://github.com/mcandre/dale), a D task runner
+* [Grunt](https://gruntjs.com/), a Node.js task runner
+* [GNU make](https://www.gnu.org/software/make/) / [BSD make](https://www.freebsd.org/cgi/man.cgi?make(1)), classic task runners
+* [lake](https://luarocks.org/modules/steved/lake), a Lua task runner
+* [mage](https://magefile.org/), a preiminent Go task runner
+* [rake](https://ruby.github.io/rake/), a preiminent Ruby task runner
+* [Shake](https://shakebuild.com/), a preiminent Haskell task runner
+* [stank](https://github.com/mcandre/stank), a collection of POSIX-y shell script linter tools
+* [tinyrick](https://github.com/mcandre/tinyrick), a Rust task runner
+* [vast](https://github.com/mcandre/vast), a POSIX sh task runner
+* [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) / [Cygwin](https://www.cygwin.com/) / [MinGW](https://www.mingw-w64.org/) / [MSYS2](https://www.msys2.org/) / [Git Bash](https://git-scm.com/downloads) / [Strawberry Perl](https://strawberryperl.com/) provide shims for many GNU/Linux components on Windows hosts
