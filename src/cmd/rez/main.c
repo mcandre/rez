@@ -81,15 +81,15 @@ int main(int argc, const char **argv) {
         strcat(command, " ");
 
         if (config.msvc) {
-            // ...
-
+            strcat(command, config.rez_file);
+            strcat(command, " ");
             strcat(command, "/link /out ");
             strcat(command, artifact);
         } else {
             strcat(command, "-o ");
             strcat(command, artifact);
-
-            // ...
+            strcat(command, " ");
+            strcat(command, config.rez_file);
         }
 
         fprintf(stderr, "running build command: %s\n", command);

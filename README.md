@@ -1,6 +1,11 @@
 # rez: a C/C++ task runner
 
-![blaster](rez.jpg)
+```text
+ `_~----====-.
+  \ <.+|*-*| '
+ /&( ``
+ \3
+```
 
 # EXAMPLE
 
