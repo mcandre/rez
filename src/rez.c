@@ -98,12 +98,12 @@ int rez_apply_msvc_toolchain(rez_config *config) {
     if (!cache_dir_exists) {
         if (errno == ENOENT) {
             errno = 0;
-            if (mkdir(REZ_CACHE_DIR) != 0) {
+            if (mkdir(REZ_CACHE_DIR, 0755) != 0) {
                 fprintf(stderr, "error creating cache directory %s. errno: %d\n", REZ_CACHE_DIR, errno);
                 return -1;
             }
         } else {
-            fprintf(stderr, "unable to query cache directory %s. errno: %d\n", errno);
+            fprintf(stderr, "unable to query cache directory %s. errno: %d\n", REZ_CACHE_DIR, errno);
         }
     }
 
