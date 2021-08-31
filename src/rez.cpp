@@ -7,10 +7,49 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <optional>
 
 #include "rez/rez.hpp"
 
 namespace rez {
+std::optional<std::string> GetEnvironmentVariable(const std::string key) {
+    char *transient = nullptr;
+
+#if defined(_MSC_VER)
+    auto len = size_t(0);
+    errno = 0;
+    _dupenv_s(&transient, &len, key.c_str());
+
+    if (errno != 0) {
+        std::cerr << "error querying environment variable " << key << " errno: " << errno << std::endl;
+        free(transient);
+        return std::nullopt;
+    }
+
+    if (transient != nullptr) {
+        const auto s = std::string(transient);
+        free(transient);
+        return std::optional(s);
+    }
+
+    free(transient);
+    return std::nullopt;
+#else
+    transient = getenv(key.c_str());
+
+    if (transient != nullptr) {
+        const auto s = std::string(transient);
+        return std::optional(s);
+    }
+#endif
+
+    return std::nullopt;
+}
+
+bool DetectWindowsEnvironment() {
+    return GetEnvironmentVariable("COMSPEC").has_value();
+}
+
 int Config::ApplyMSVCToolchain() {
     std::filesystem::create_directories(CacheDir);
 
@@ -74,42 +113,22 @@ int Config::ApplyMSVCToolchain() {
 }
 
 int Config::Load() {
-#if defined(_MSC_VER)
-    this->compiler = DefaultCompilerWindows;
-#else
-    this->compiler = DefaultCompilerUnix;
-#endif
+    this->windows = DetectWindowsEnvironment();
 
-    const char *key = CompilerEnvVar.c_str();
-    char *compiler_override_transient = nullptr;
-    auto compiler_override = std::string();
-
-#if defined(_MSC_VER)
-    auto len = size_t(0);
-    errno = 0;
-    _dupenv_s(&compiler_override_transient, &len, key);
-
-    if (errno != 0) {
-        std::cerr << "error querying environment variable " << key << " errno: " << errno << std::endl;
-        free(compiler_override_transient);
-        return -1;
+    if (this->windows) {
+        this->compiler = DefaultCompilerWindows;
+    } else {
+        this->compiler = DefaultCompilerUnix;
     }
 
-    if (compiler_override_transient != nullptr) {
-        compiler_override = std::string(compiler_override_transient);
-    }
+    const auto compiler_override = GetEnvironmentVariable(CompilerEnvVar);
 
-    free(compiler_override_transient);
-#else
-    compiler_override_transient = getenv(key);
+    if (compiler_override.has_value()) {
+        const auto compiler_override_s = *compiler_override;
 
-    if (compiler_override_transient != nullptr) {
-        compiler_override = std::string(compiler_override_transient);
-    }
-#endif
-
-    if (compiler_override != "") {
-        this->compiler = compiler_override;
+        if (compiler_override_s != "") {
+            this->compiler = compiler_override_s;
+        }
     }
 
     if (this->compiler == DefaultCompilerWindows && this->ApplyMSVCToolchain() < 0) {
@@ -117,12 +136,21 @@ int Config::Load() {
         return -1;
     }
 
+    auto executable = std::filesystem::path(ArtifactBinaryUnix);
+
+    if (this->windows) {
+        executable += ExecutableExtensionWindows;
+    }
+
+    this->artifact_path = ArtifactDir / executable;
     return 0;
 }
 
 std::ostream& operator << (std::ostream &os, const Config o) {
     return os << "{ debug: " << o.debug
-                << " compiler: " << o.compiler
+                << ", windows: " << o.windows
+                << ", compiler: " << o.compiler
+                << ", artifact_path: " << o.artifact_path.string()
                 << " }";
 }
 }

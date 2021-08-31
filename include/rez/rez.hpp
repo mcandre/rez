@@ -1,4 +1,7 @@
+#pragma once
+
 #include <filesystem>
+#include <optional>
 
 namespace rez {
 static const std::string Version = "0.0.1";
@@ -15,12 +18,6 @@ static const auto ArtifactBinaryUnix = std::string("rez");
 
 static const auto ExecutableExtensionWindows = std::string(".exe");
 
-#if defined(_MSC_VER)
-static const auto ArtifactBinaryPath = ArtifactDir / std::filesystem::path(ArtifactBinaryUnix + ExecutableExtensionWindows);
-#else
-static const auto ArtifactBinaryPath = ArtifactDir / ArtifactBinaryUnix;
-#endif
-
 static const auto DefaultCompilerUnix = std::string("c++");
 
 static const auto DefaultCompilerWindows = std::string("cl");
@@ -29,9 +26,15 @@ static const auto CompilerEnvVar = std::string("CXX");
 
 static const auto MSVCToolchainQueryScript = std::string("C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat");
 
+std::optional<std::string> GetEnvironmentVariable(const std::string key);
+
+bool DetectWindowsEnvironment();
+
 struct Config {
     bool debug;
+    bool windows;
     std::string compiler;
+    std::filesystem::path artifact_path;
 
     int ApplyMSVCToolchain();
 

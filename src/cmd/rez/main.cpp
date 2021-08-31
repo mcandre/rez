@@ -61,12 +61,12 @@ int main(int argc, const char **argv) {
         std::cerr << config << std::endl;
     }
 
-    if (!std::filesystem::exists(rez::ArtifactBinaryPath)) {
+    if (!std::filesystem::exists(config.artifact_path)) {
         std::stringstream ss;
         ss << config.compiler;
         ss << " ";
 
-        const auto artifact_binary_path_s = rez::ArtifactBinaryPath.string();
+        const auto artifact_binary_path_s = config.artifact_path.string();
 
         if (config.compiler == rez::DefaultCompilerWindows) {
             ss << rez::RezFile.string();
