@@ -9,7 +9,7 @@
 
 # SUMMARY
 
-rez processes C++ tasks.
+rez runs C++ tasks.
 
 Where other runners depend on managing secondary DSL's, *rez* collapses the software stack. Application and build scripts: One programming language.
 

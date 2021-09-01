@@ -1,11 +1,21 @@
+/**
+ * @copyright 2021 YelloSoft
+ */
+
 #include <cstdlib>
 #include <iostream>
 #include <vector>
 
 #include "rez/rez.hpp"
 
-void Usage(const std::string program) {
-    std::cerr << "usage: " << program << " [OPTION] [<task> [<task> [<task>...]]]" << std::endl << std::endl;
+/**
+ * @brief Usage emits operational documentation.
+ *
+ * @param program the invoked name of this program
+ */
+static void Usage(const std::string &program) {
+    std::cerr << "usage: " << program << " [OPTION] [<task> [<task> [<task>...]]]" << std::endl
+              << std::endl;
 
     std::cerr << "-l\tList available tasks" << std::endl
               << "-c\tClean rez internal cache" << std::endl
@@ -14,17 +24,29 @@ void Usage(const std::string program) {
               << "-h\tShow usage information" << std::endl;
 }
 
+/**
+ * @brief Banner emits version information.
+ */
 static void Banner() {
     std::cout << "rez " << rez::Version << std::endl;
 }
 
+/**
+ * @brief main is the entrypoint.
+ *
+ * @ref Usage emits operational documentation.
+ *
+ * @param argc argument count
+ * @param argv CLI arguments
+ * @returns CLI exit code
+ */
 int main(int argc, const char **argv) {
     rez::Config config;
 
     auto args = std::vector<std::string_view>{ argv, argv + argc };
 
-    size_t i;
-    for (i = size_t(1); i < args.size(); i++) {
+    auto i = size_t(1);
+    for (; i < args.size(); i++) {
         const auto arg = args[i];
 
         if (arg == "-c") {
@@ -69,14 +91,14 @@ int main(int argc, const char **argv) {
         const auto artifact_binary_path_s = config.artifact_path.string();
 
         if (config.compiler == rez::DefaultCompilerWindows) {
-            ss << rez::RezFile.string();
+            ss << rez::RezFile;
             ss << " /link /out ";
             ss << artifact_binary_path_s;
         } else {
             ss << "-o ";
             ss << artifact_binary_path_s;
             ss << " ";
-            ss << rez::RezFile.string();
+            ss << rez::RezFile;
         }
 
         const auto command = ss.str();

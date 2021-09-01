@@ -1,3 +1,7 @@
+/**
+ * @copyright 2021 YelloSoft
+ */
+
 #include <cstdio>
 #if defined(_MSC_VER)
 #define pclose _pclose
@@ -12,7 +16,7 @@
 #include "rez/rez.hpp"
 
 namespace rez {
-std::optional<std::string> GetEnvironmentVariable(const std::string key) {
+std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     char *transient = nullptr;
 
 #if defined(_MSC_VER)
@@ -50,15 +54,21 @@ bool DetectWindowsEnvironment() {
     return GetEnvironmentVariable("COMSPEC").has_value();
 }
 
-int Config::ApplyMSVCToolchain() {
+[[nodiscard]] int Config::ApplyMSVCToolchain() const {
     std::filesystem::create_directories(CacheDir);
 
-    if (!std::filesystem::exists(CachePath)) {
+    if (!std::filesystem::exists(this->cache_file_path)) {
         std::cerr << "querying msvc toolchain..." << std::endl;
 
-        const auto command = std::string("powershell.exe -Command \"cmd /c \"\""
-                                + MSVCToolchainQueryScript
-                                + "\"\"\" & set");
+        std::stringstream ss;
+        ss << "powershell.exe ";
+        ss << "-Command ";
+        ss << R"("cmd /c "")";
+        ss << MSVCToolchainQueryScript;
+        ss << R"(""" )";
+        ss << "& set";
+
+        const auto command = ss.str();
 
         errno = 0;
         FILE *process = popen(command.c_str(), "r");
@@ -69,7 +79,7 @@ int Config::ApplyMSVCToolchain() {
         }
 
         auto cache_writer = std::ofstream();
-        cache_writer.open(CachePath);
+        cache_writer.open(this->cache_file_path);
 
         char line[1024] = { 0 };
 
@@ -80,13 +90,13 @@ int Config::ApplyMSVCToolchain() {
         cache_writer.close();
 
         if (pclose(process) != EXIT_SUCCESS) {
-            std::cerr << "error closing process handle: " << CachePath << std::endl;
+            std::cerr << "error closing process handle: " << this->cache_file_path << std::endl;
             return -1;
         }
     }
 
     auto cache_reader = std::ifstream();
-    cache_reader.open(CachePath);
+    cache_reader.open(this->cache_file_path);
 
     std::string line;
 
@@ -112,7 +122,10 @@ int Config::ApplyMSVCToolchain() {
     return 0;
 }
 
-int Config::Load() {
+[[nodiscard]] int Config::Load() {
+    this->cache_dir_path = std::filesystem::path(CacheDir);
+    this->cache_file_path = this->cache_dir_path / CacheFileBasename;
+
     this->windows = DetectWindowsEnvironment();
 
     if (this->windows) {
@@ -121,12 +134,12 @@ int Config::Load() {
         this->compiler = DefaultCompilerUnix;
     }
 
-    const auto compiler_override = GetEnvironmentVariable(CompilerEnvVar);
+    const auto compiler_override = GetEnvironmentVariable(std::string("CXX"));
 
     if (compiler_override.has_value()) {
         const auto compiler_override_s = *compiler_override;
 
-        if (compiler_override_s != "") {
+        if (!compiler_override_s.empty()) {
             this->compiler = compiler_override_s;
         }
     }
@@ -139,18 +152,20 @@ int Config::Load() {
     auto executable = std::filesystem::path(ArtifactBinaryUnix);
 
     if (this->windows) {
-        executable += ExecutableExtensionWindows;
+        executable += ".exe";
     }
 
-    this->artifact_path = ArtifactDir / executable;
+    this->artifact_path = this->cache_dir_path / std::filesystem::path(ArtifactDirBasename) / executable;
     return 0;
 }
 
-std::ostream& operator << (std::ostream &os, const Config o) {
+std::ostream &operator<<(std::ostream &os, const Config &o) {
     return os << "{ debug: " << o.debug
-                << ", windows: " << o.windows
-                << ", compiler: " << o.compiler
-                << ", artifact_path: " << o.artifact_path.string()
-                << " }";
+              << ", cache_dir_path: " << o.cache_dir_path.string()
+              << ", cache_file_path: " << o.cache_file_path.string()
+              << ", windows: " << o.windows
+              << ", compiler: " << o.compiler
+              << ", artifact_path: " << o.artifact_path.string()
+              << " }";
 }
 }
