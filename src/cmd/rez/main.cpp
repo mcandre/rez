@@ -81,9 +81,10 @@ int main(int argc, const char **argv) {
         std::cerr << config << std::endl;
     }
 
-    if (!std::filesystem::exists(config.artifact_file_path) ||
-        std::filesystem::last_write_time(config.artifact_file_path) < std::filesystem::last_write_time(rez::RezFile)
-    ) {
+    bool artifact_cache_miss = !std::filesystem::exists(config.artifact_file_path) ||
+                               std::filesystem::last_write_time(config.artifact_file_path) < std::filesystem::last_write_time(rez::RezFile);
+
+    if (artifact_cache_miss) {
         std::filesystem::create_directories(config.artifact_dir_path);
 
         const auto build_command = config.build_command;

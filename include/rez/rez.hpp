@@ -54,6 +54,8 @@ static const char *ArtifactBinaryUnix = "rez";
  * This compiler is activated automatically when the runtime environment is detected as (COMSPEC) Windows.
  *
  * The compiler may be overridden by supplying a non-blank value to the CXX environment variable.
+ *
+ * Custom flags may be passed to the compiler via a CPPFLAGS or CXXFLAGS environment variable.
  */
 static const char *DefaultCompilerWindows = "cl";
 
@@ -61,6 +63,8 @@ static const char *DefaultCompilerWindows = "cl";
  * @brief DefaultCompilerUnix denotes the standard UNIX C++ compiler executable basename.
  *
  * The compiler may be overridden by supplying a non-blank value to the CXX environment variable.
+ *
+ * Custom flags may be passed to the compiler via a CPPFLAGS or CXXFLAGS environment variable.
  */
 static const char *DefaultCompilerUnix = "c++";
 
