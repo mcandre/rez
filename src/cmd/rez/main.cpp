@@ -34,8 +34,6 @@ static void Banner() {
 /**
  * @brief main is the entrypoint.
  *
- * @ref Usage emits operational documentation.
- *
  * @param argc argument count
  * @param argv CLI arguments
  * @returns CLI exit code

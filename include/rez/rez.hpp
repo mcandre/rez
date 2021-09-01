@@ -155,7 +155,6 @@ struct Config {
     /**
      * @brief ApplyMSVCToolchain loads MSVC environment variables for cl into the current process.
      *
-     * Environment variables are cached in @ref CacheFile.
      */
     [[nodiscard]] int ApplyMSVCToolchain() const;
 
