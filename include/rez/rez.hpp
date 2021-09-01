@@ -144,10 +144,10 @@ struct Config {
      *
      * Examples:
      *
-     * * std::string("c++")
-     * * std::string("cl")
-     * * std::string("clang++")
-     * * std::string("g++")
+     * * "c++"s
+     * * "cl"s
+     * * "clang++"s
+     * * "g++"s
      */
     std::string compiler;
 
@@ -156,8 +156,7 @@ struct Config {
      *
      * Examples:
      *
-     * * std::filesystem::path(".rez/bin")
-     * * std::filesystem::path(R"(.rez\bin)")
+     * * std::filesystem::path(".rez") / "bin"
      */
     std::filesystem::path artifact_dir_path;
 
@@ -166,8 +165,8 @@ struct Config {
      *
      * Examples:
      *
-     * * std::filesystem::path(".rez/bin/rez")
-     * * std::filesystem::path(R"(.rez\bin\rez.exe)")
+     * * std::filesystem::path(".rez") / "bin" / "rez"
+     * * std::filesystem::path(".rez") / "bin" / "rez.exe"
      */
     std::filesystem::path artifact_file_path;
 
@@ -176,8 +175,8 @@ struct Config {
      *
      * Examples:
      *
-     * * std::string("c++ -o .rez/bin/rez rez.cpp")
-     * * std::string(R"(cl rez.cpp /link /out:.rez\bin\rez.exe)")
+     * * "c++ -o .rez/bin/rez rez.cpp"s
+     * * R"(cl rez.cpp /link /out:.rez\bin\rez.exe)"s
      */
     std::string build_command;
 

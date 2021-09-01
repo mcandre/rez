@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include <cstring>
+
 #include <fstream>
 #include <iostream>
 #include <optional>
@@ -84,7 +85,8 @@ bool DetectWindowsEnvironment() {
         auto cache_writer = std::ofstream();
         cache_writer.open(cache_file_path);
 
-        char line[1024] = { 0 };
+        // https://devblogs.microsoft.com/oldnewthing/20100203-00/?p=15083#:~:text=The%20theoretical%20maximum%20length%20of,a%20limit%20of%2032767%20characters.
+        char line[32760] = { 0 };
 
         while (fgets(line, sizeof(line), process) != nullptr) {
             if (strchr(line, '=') != nullptr) {

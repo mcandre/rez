@@ -1,11 +1,34 @@
 # rez: a C++ task runner
 
-```text
- `_~----====-.
-  \ <.+|*-*| '
- /&( ``
- \3
+Generate and retire artifacts, like so many tears in the rain...
+
+# EXAMPLE
+
+```console
+$ cd example
+$ rez
+
+   ...    *    .   _  .
+*  .  *     .   * (_)   *
+  .      |*  ..   *   ..
+   .  * \|  *  ___  . . *
+*   \/   |/ \/{0,Q}     .
+  _\_\   |  / /)  )* _/_ *
+      \ \| /,--"-"---  ..
+_-----`  |(,__,__/__/_ .
+       \ ||      ..
+        ||| .            *
+        |||
+        |||
+  , -=-~' .-^- _
+
+Must be expensive.
+
 ```
+
+# LICENSE
+
+FreeBSD
 
 # SUMMARY
 
@@ -16,36 +39,31 @@ Where other runners depend on managing secondary DSL's, *rez* collapses the soft
 * Minimize environment bloat.
 * Maximize expressiveness.
 
-# EXAMPLE
+# RUNTIME REQUIREMENTS
 
-```console
-$ cd example
-$ rez
-Hiya~
+```text
+ `_~----====-.
+  \ <.+|*-*| '
+ /&( ``
+ \3
 ```
+
+* a [C++](https://isocpp.org/) compiler, esp. C++17 or higher
+
+## Recommended
+
+* [cmake](https://cmake.org/)
+* [direnv](https://direnv.net/) / [posh-direnv](https://github.com/takekazuomi/posh-direnv)
 
 # ABOUT
 
-rez observes a few particular pain points of software development:
-
-* Hidden bugs
-* Vendor locking
+rez observes a few particular pain points of software development, including hidden bugs and vendor locking.
 
 In application code, these pain points are already managed with a variety of classic software techniques. For example, C++ illuminates many potential kinds of bugs and eliminate them at compile time. In terms of vendor locking, C++ documentation clarifies platform support. C++ features more predictable error handling semantics than shell scripts. And of course, C++ code runs faster than interpreted code.
 
 We want to bring this same rigor in applications, to build systems. For example, common shell-outs to `rm` / `del`... become `std::filesystem::remove_all`.
 
 rez simply wraps your desired build tasks; These can be underlying cmake/make/autotools/etc. commands. rez offers some zero conf defaults, but in general promotes flexibility with the rest of the C++ ecosystem.
-
-Retire junk files, *like tears in the rain...*
-
-# RUNTIME REQUIREMENTS
-
-* a [C++](https://isocpp.org/) compiler, e.g. LLVM clang++, GNU g++, MSVC cl, etc.
-
-## Recommended
-
-* [direnv](https://direnv.net/) / [posh-direnv](https://github.com/takekazuomi/posh-direnv) automate shell configuration on a per-user, per-project basis
 
 # SEE ALSO
 

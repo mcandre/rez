@@ -1,8 +1,10 @@
-html/
-latex/
-debug.log
+.rez/
+.psenvrc
 bin/
 debug/
+debug.log
+html/
+latex/
 CTestTestfile.cmake
 Testing/
 crash-*
@@ -13,62 +15,42 @@ leak-*
 *.vcxproj.filters
 *.sln
 *.dir
-# Created by https://www.toptal.com/developers/gitignore/api/c,cmake,VisualStudio
-# Edit at https://www.toptal.com/developers/gitignore?templates=c,cmake,VisualStudio
+# Created by https://www.toptal.com/developers/gitignore/api/c++,cmake,VisualStudio
+# Edit at https://www.toptal.com/developers/gitignore?templates=c++,cmake,VisualStudio
 
-### C ###
+### C++ ###
 # Prerequisites
 *.d
 
-# Object files
+# Compiled Object files
+*.slo
+*.lo
 *.o
-*.ko
 *.obj
-*.elf
-
-# Linker output
-*.ilk
-*.map
-*.exp
 
 # Precompiled Headers
 *.gch
 *.pch
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
+# Compiled Dynamic libraries
 *.so
-*.so.*
 *.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
 
 # Executables
 *.exe
 *.out
 *.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
 
 ### CMake ###
 CMakeLists.txt.user
@@ -162,8 +144,10 @@ StyleCopReport.xml
 *_i.c
 *_p.c
 *_h.h
+*.ilk
 *.meta
 *.iobj
+*.pdb
 *.ipdb
 *.pgc
 *.pgd
@@ -476,4 +460,4 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# End of https://www.toptal.com/developers/gitignore/api/c,cmake,VisualStudio
+# End of https://www.toptal.com/developers/gitignore/api/c++,cmake,VisualStudio

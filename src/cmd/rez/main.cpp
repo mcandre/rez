@@ -3,6 +3,7 @@
  */
 
 #include <cstdlib>
+
 #include <iostream>
 #include <vector>
 
@@ -41,9 +42,9 @@ static void Banner() {
 int main(int argc, const char **argv) {
     rez::Config config;
 
-    auto args = std::vector<std::string_view>{ argv, argv + argc };
+    const auto args = std::vector<std::string_view>{ argv, argv + argc };
 
-    auto i = size_t(1);
+    size_t i(1);
     for (; i < args.size(); i++) {
         const auto arg = args[i];
 
@@ -70,7 +71,7 @@ int main(int argc, const char **argv) {
         break;
     }
 
-    // const auto rest = std::vector<std::string_view>{ args.begin() + i, args.end() };
+    const auto rest = std::vector<std::string_view>{ args.begin() + i, args.end() };
 
     if (config.Load() < 0) {
         std::cerr << "error loading config" << std::endl;
@@ -101,6 +102,19 @@ int main(int argc, const char **argv) {
         }
     }
 
-    const auto run_command = config.artifact_file_path.string();
+    std::stringstream ss;
+    ss << config.artifact_file_path.string();
+
+    for (const auto &arg : rest) {
+        ss << " ";
+        ss << arg;
+    }
+
+    const auto run_command = ss.str();
+
+    if (config.debug) {
+        std::cerr << "running command: " << run_command << std::endl;
+    }
+
     return system(run_command.c_str());
 }
