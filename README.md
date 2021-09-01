@@ -45,6 +45,7 @@ Retire junk files, *like tears in the rain...*
 * [batsch](https://batsh.org/), a preprocessing language that compiles to bash and MS-DOS bat files (somewhat defunct)
 * [cmake](https://cmake.org/), a preiminent cross-platform build system
 * [dale](https://github.com/mcandre/dale), a D task runner
+* [Gradle](https://gradle.org/) / [Maven](https://maven.apache.org/) / [Ant](https://ant.apache.org/), preiminent JVM build tools
 * [Grunt](https://gruntjs.com/), a Node.js task runner
 * [GNU make](https://www.gnu.org/software/make/) / [BSD make](https://www.freebsd.org/cgi/man.cgi?make(1)), classic task runners
 * [lake](https://luarocks.org/modules/steved/lake), a Lua task runner
