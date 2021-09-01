@@ -20,8 +20,8 @@ Where other runners depend on managing secondary DSL's, *rez* collapses the soft
 
 ```console
 $ cd example
-$ rez hello
-...
+$ rez
+Hiya~
 ```
 
 # ABOUT
@@ -38,6 +38,14 @@ We want to bring this same rigor in applications, to build systems. For example,
 rez simply wraps your desired build tasks; These can be underlying cmake/make/autotools/etc. commands. rez offers some zero conf defaults, but in general promotes flexibility with the rest of the C++ ecosystem.
 
 Retire junk files, *like tears in the rain...*
+
+# RUNTIME REQUIREMENTS
+
+* a [C++](https://isocpp.org/) compiler, e.g. LLVM clang++, GNU g++, MSVC cl, etc.
+
+## Recommended
+
+* [direnv](https://direnv.net/) / [posh-direnv](https://github.com/takekazuomi/posh-direnv) automate shell configuration on a per-user, per-project basis
 
 # SEE ALSO
 

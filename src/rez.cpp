@@ -9,6 +9,7 @@
 #endif
 
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <optional>
@@ -57,46 +58,51 @@ bool DetectWindowsEnvironment() {
 [[nodiscard]] int Config::ApplyMSVCToolchain() const {
     std::filesystem::create_directories(CacheDir);
 
-    if (!std::filesystem::exists(this->cache_file_path)) {
+    if (!std::filesystem::exists(cache_file_path)) {
         std::cerr << "querying msvc toolchain..." << std::endl;
 
         std::stringstream ss;
-        ss << "powershell.exe ";
-        ss << "-Command ";
-        ss << R"("cmd /c "")";
+        ss << R"(cmd.exe /c "")";
         ss << MSVCToolchainQueryScript;
-        ss << R"(""" )";
-        ss << "& set";
+        ss << R"(" )";
+        ss << DefaultArchitectureMSVC;
+        ss << R"( && set")";
+        const auto query_command = ss.str();
 
-        const auto command = ss.str();
+        if (debug) {
+            std::cerr << "running msvc query command: " << query_command << std::endl;
+        }
 
         errno = 0;
-        FILE *process = popen(command.c_str(), "r");
+        FILE *process = popen(query_command.c_str(), "r");
 
         if (process == nullptr) {
-            std::cerr << "error launching command: " << command << std::endl;
+            std::cerr << "error launching msvc query command: " << query_command << std::endl;
             return -1;
         }
 
         auto cache_writer = std::ofstream();
-        cache_writer.open(this->cache_file_path);
+        cache_writer.open(cache_file_path);
 
         char line[1024] = { 0 };
 
         while (fgets(line, sizeof(line), process) != nullptr) {
-            cache_writer << line;
+            if (strchr(line, '=') != nullptr) {
+                cache_writer << line;
+            }
         }
 
         cache_writer.close();
+        const auto query_status = pclose(process);
 
-        if (pclose(process) != EXIT_SUCCESS) {
-            std::cerr << "error closing process handle: " << this->cache_file_path << std::endl;
+        if (query_status != EXIT_SUCCESS) {
+            std::cerr << "error processing msvc query command. status: " << query_status << std::endl;
             return -1;
         }
     }
 
     auto cache_reader = std::ifstream();
-    cache_reader.open(this->cache_file_path);
+    cache_reader.open(cache_file_path);
 
     std::string line;
 
@@ -123,15 +129,15 @@ bool DetectWindowsEnvironment() {
 }
 
 [[nodiscard]] int Config::Load() {
-    this->cache_dir_path = std::filesystem::path(CacheDir);
-    this->cache_file_path = this->cache_dir_path / CacheFileBasename;
+    cache_dir_path = std::filesystem::path(CacheDir);
+    cache_file_path = cache_dir_path / CacheFileBasename;
 
-    this->windows = DetectWindowsEnvironment();
+    windows = DetectWindowsEnvironment();
 
-    if (this->windows) {
-        this->compiler = DefaultCompilerWindows;
+    if (windows) {
+        compiler = DefaultCompilerWindows;
     } else {
-        this->compiler = DefaultCompilerUnix;
+        compiler = DefaultCompilerUnix;
     }
 
     const auto compiler_override = GetEnvironmentVariable(std::string("CXX"));
@@ -140,22 +146,86 @@ bool DetectWindowsEnvironment() {
         const auto compiler_override_s = *compiler_override;
 
         if (!compiler_override_s.empty()) {
-            this->compiler = compiler_override_s;
+            compiler = compiler_override_s;
         }
     }
 
-    if (this->compiler == DefaultCompilerWindows && this->ApplyMSVCToolchain() < 0) {
+    if (compiler == DefaultCompilerWindows && ApplyMSVCToolchain() < 0) {
         std::cerr << "error applying msvc toolchain" << std::endl;
         return -1;
     }
 
+    artifact_dir_path = cache_dir_path / std::filesystem::path(ArtifactDirBasename);
+
     auto executable = std::filesystem::path(ArtifactBinaryUnix);
 
-    if (this->windows) {
+    if (windows) {
         executable += ".exe";
     }
 
-    this->artifact_path = this->cache_dir_path / std::filesystem::path(ArtifactDirBasename) / executable;
+    artifact_file_path = artifact_dir_path / executable;
+
+    std::stringstream ss;
+    ss << compiler;
+    ss << " ";
+
+    const auto flags_cpp_opt = rez::GetEnvironmentVariable("CPPFLAGS");
+    std::string flags_cpp;
+
+    if (flags_cpp_opt.has_value()) {
+        const auto flags = *flags_cpp_opt;
+
+        if (!flags.empty()) {
+            flags_cpp = flags;
+        }
+    }
+
+    const auto flags_cxx_opt = rez::GetEnvironmentVariable("CXXFLAGS");
+    std::string flags_cxx;
+
+    if (flags_cxx_opt.has_value()) {
+        const auto flags = *flags_cxx_opt;
+
+        if (!flags.empty()) {
+            flags_cxx = flags;
+        }
+    }
+
+    const auto artifact_file_path_s = artifact_file_path.string();
+
+    if (compiler == DefaultCompilerWindows) {
+        if (!flags_cpp.empty()) {
+            ss << flags_cpp;
+            ss << " ";
+        }
+
+        if (!flags_cxx.empty()) {
+            ss << flags_cxx;
+            ss << " ";
+        }
+
+        ss << RezFile;
+        ss << " /link /out:";
+        ss << artifact_file_path_s;
+    } else {
+        ss << "-o ";
+        ss << artifact_file_path_s;
+        ss << " ";
+
+        if (!flags_cpp.empty()) {
+            ss << flags_cpp;
+            ss << " ";
+        }
+
+        if (!flags_cxx.empty()) {
+            ss << flags_cxx;
+            ss << " ";
+        }
+
+        ss << RezFile;
+    }
+
+    build_command = ss.str();
     return 0;
 }
 
@@ -165,7 +235,9 @@ std::ostream &operator<<(std::ostream &os, const Config &o) {
               << ", cache_file_path: " << o.cache_file_path.string()
               << ", windows: " << o.windows
               << ", compiler: " << o.compiler
-              << ", artifact_path: " << o.artifact_path.string()
+              << ", artifact_dir_path: " << o.artifact_dir_path.string()
+              << ", artifact_file_path: " << o.artifact_file_path.string()
+              << ", build_command: " << o.build_command
               << " }";
 }
 }

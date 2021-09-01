@@ -81,32 +81,25 @@ int main(int argc, const char **argv) {
         std::cerr << config << std::endl;
     }
 
-    if (!std::filesystem::exists(config.artifact_path)) {
-        std::stringstream ss;
-        ss << config.compiler;
-        ss << " ";
+    if (!std::filesystem::exists(config.artifact_file_path) ||
+        std::filesystem::last_write_time(config.artifact_file_path) < std::filesystem::last_write_time(rez::RezFile)
+    ) {
+        std::filesystem::create_directories(config.artifact_dir_path);
 
-        const auto artifact_binary_path_s = config.artifact_path.string();
+        const auto build_command = config.build_command;
 
-        if (config.compiler == rez::DefaultCompilerWindows) {
-            ss << rez::RezFile;
-            ss << " /link /out ";
-            ss << artifact_binary_path_s;
-        } else {
-            ss << "-o ";
-            ss << artifact_binary_path_s;
-            ss << " ";
-            ss << rez::RezFile;
+        if (config.debug) {
+            std::cerr << "running build command: " << build_command << std::endl;
         }
 
-        const auto command = ss.str();
+        const auto build_status = system(build_command.c_str());
 
-        std::cerr << "running build command: " << command << std::endl;
-
-        // ...
+        if (build_status != EXIT_SUCCESS) {
+            std::cerr << "error building task file: " << rez::RezFile << std::endl;
+            return build_status;
+        }
     }
 
-    // ...
-
-    return EXIT_SUCCESS;
+    const auto run_command = config.artifact_file_path.string();
+    return system(run_command.c_str());
 }

@@ -67,7 +67,12 @@ static const char *DefaultCompilerUnix = "c++";
 /**
  * @brief MSVCToolchainQueryScript denotes the standard script which prepares environment variables for executing MSVC cl commands.
  */
-static const char *MSVCToolchainQueryScript = R"(C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat)";
+static const char *MSVCToolchainQueryScript = R"(C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat)";
+
+/**
+ * @brief DefaultArchitectureWindows denotes the default architecture for MSVC-generated binaries.
+ */
+static const char *DefaultArchitectureMSVC = "x64";
 
 /**
  * @brief GetEnvironmentVariable retrieves environment variables.
@@ -143,14 +148,34 @@ struct Config {
     std::string compiler;
 
     /**
-     * @brief artifact_path controls whether additional logging is performed. (Default: Determined at runtime by @ref Load)
+     * @brief artifact_dir_path denotes the path to the artifact subdirectory. (Default: Determined at runtime by @ref Load)
+     *
+     * Examples:
+     *
+     * * std::filesystem::path(".rez/bin")
+     * * std::filesystem::path(R"(.rez\bin)")
+     */
+    std::filesystem::path artifact_dir_path;
+
+    /**
+     * @brief artifact_file_path denotes the binary path where user task executable shall be generated (Default: Determined at runtime by @ref Load)
      *
      * Examples:
      *
      * * std::filesystem::path(".rez/bin/rez")
-     * * std::filesystem::path(".rez\bin\rez.exe")
+     * * std::filesystem::path(R"(.rez\bin\rez.exe)")
      */
-    std::filesystem::path artifact_path;
+    std::filesystem::path artifact_file_path;
+
+    /**
+     * @brief build_command denotes the compilation step for the user task source file (Default: Determined at runtime by @ref Load)
+     *
+     * Examples:
+     *
+     * * std::string("c++ -o .rez/bin/rez rez.cpp")
+     * * std::string(R"(cl rez.cpp /link /out:.rez\bin\rez.exe)")
+     */
+    std::string build_command;
 
     /**
      * @brief ApplyMSVCToolchain loads MSVC environment variables for cl into the current process.
