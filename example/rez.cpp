@@ -31,7 +31,8 @@ static int run_task() {
 int main(int argc, const char **argv) {
     const auto default_task = std::function<int()>(run_task);
     const auto tasks = std::unordered_map<std::string_view, std::function<int()>>{
-        { "build"sv, build_task }
+        { "build"sv, build_task },
+        { "run"sv, run_task }
     };
 
     const auto args = std::vector<std::string_view>{ argv + 1, argv + argc };
