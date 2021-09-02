@@ -14,6 +14,7 @@
 #include <fstream>
 #include <iostream>
 #include <optional>
+#include <sstream>
 
 #include "rez/rez.hpp"
 
