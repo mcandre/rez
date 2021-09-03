@@ -69,6 +69,7 @@ rez simply wraps your desired build tasks; These can be underlying cmake/make/au
 
 * [autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html), a preiminent GNU/Linux build system
 * [batsch](https://batsh.org/), a preprocessing language that compiles to bash and MS-DOS bat files (somewhat defunct)
+* [cling](https://root.cern/cling/), a C++ interpreter
 * [cmake](https://cmake.org/), a preiminent cross-platform build system
 * [dale](https://github.com/mcandre/dale), a D task runner
 * [Gradle](https://gradle.org/) / [Maven](https://maven.apache.org/) / [Ant](https://ant.apache.org/), preiminent JVM build tools
