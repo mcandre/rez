@@ -81,6 +81,7 @@ See [example/](example) for more detail.
 * [cling](https://root.cern/cling/), a C++ interpreter
 * [cmake](https://cmake.org/), a preiminent cross-platform build system
 * [dale](https://github.com/mcandre/dale), a D task runner
+* [ejm98](http://www.ascii-art.de/ascii/mno/owl.txt) for Athena's prior artwork
 * [Gradle](https://gradle.org/) / [Maven](https://maven.apache.org/) / [Ant](https://ant.apache.org/), preiminent JVM build tools
 * [Grunt](https://gruntjs.com/), a Node.js task runner
 * [GNU make](https://www.gnu.org/software/make/) / [BSD make](https://www.freebsd.org/cgi/man.cgi?make(1)), classic task runners
