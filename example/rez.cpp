@@ -4,7 +4,7 @@
 #include <functional>
 #include <iostream>
 #include <string_view>
-#include <unordered_map>
+#include <map>
 #include <vector>
 
 using std::literals::string_view_literals::operator""sv;
@@ -31,7 +31,7 @@ static int run_task() {
 
 int main(int argc, const char **argv) {
     const auto default_task = std::function<int()>(run_task);
-    const auto tasks = std::unordered_map<std::string_view, std::function<int()>>{
+    const auto tasks = std::map<std::string_view, std::function<int()>>{
         { "build"sv, build_task },
         { "run"sv, run_task }
     };
