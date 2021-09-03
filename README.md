@@ -87,6 +87,7 @@ See [example/](example) for more detail.
 * [lake](https://luarocks.org/modules/steved/lake), a Lua task runner
 * [mage](https://magefile.org/), a preiminent Go task runner
 * [rake](https://ruby.github.io/rake/), a preiminent Ruby task runner
+* Not to be confused with [Rezz](http://officialrezz.com/), a preiminent DJ
 * [sail](https://github.com/mcandre/sail), a fast C/C++ source file identifier
 * [Shake](https://shakebuild.com/), a preiminent Haskell task runner
 * [stank](https://github.com/mcandre/stank), a collection of POSIX-y shell script linter tools
