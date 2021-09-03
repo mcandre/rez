@@ -1,5 +1,43 @@
 # rez: a C/C++ task runner
 
+```text
+ `_~----====-.
+  \ <.+|*-*| '
+ /&( ``
+ \3
+```
+
+# LICENSE
+
+FreeBSD
+
+# SUMMARY
+
+rez runs C/C++ tasks.
+
+Where other runners depend on managing secondary DSL's, *rez* collapses the software stack. Implement your build scripts in the same language as your application.
+
+* Minimize environment bloat.
+* Maximize expressiveness.
+
+# RUNTIME REQUIREMENTS
+
+* a C/C++ 17 compiler
+
+## Recommended
+
+* [direnv](https://direnv.net/) / [posh-direnv](https://github.com/takekazuomi/posh-direnv)
+
+# ABOUT
+
+rez observes a few particular pain points of software development, including hidden bugs and vendor locking.
+
+In application code, these pain points are already managed with a variety of classic software techniques. For example, the C/C++ (native) programming languages illuminate many potential kinds of bugs and eliminate them at compile time. In terms of vendor locking, native documentation clarifies platform support. Native languages feature more predictable error handling semantics than shell scripts. And of course, compiled code runs faster than interpreted code.
+
+We want to bring this same rigor in applications, to build systems. For example, common shell-outs to `rm` / `del`... become `std::filesystem::remove_all` in C++.
+
+rez is build tool agnostic: It simply wraps your traditional build tool of choice. For example, rez tasks can invoke direct compiler commands, or cmake/make/autotools/etc.
+
 Generate and retire artifacts, like so many tears in the rain...
 
 # EXAMPLE
@@ -26,43 +64,15 @@ Must be expensive.
 
 ```
 
-# LICENSE
+## Configuration
 
-FreeBSD
+1. Define your build tasks in a `rez.cpp` or `rez.c` file.
 
-# SUMMARY
+2. Implement a handler for `-l` (list) argv, to list the names of your build tasks.
 
-rez runs C/C++ tasks.
+3. Implement argv handlers for your tasks.
 
-Where other runners depend on managing secondary DSL's, *rez* collapses the software stack. Implement your build scripts in the same language as your application.
-
-* Minimize environment bloat.
-* Maximize expressiveness.
-
-# RUNTIME REQUIREMENTS
-
-```text
- `_~----====-.
-  \ <.+|*-*| '
- /&( ``
- \3
-```
-
-* a C/C++ 17 compiler
-
-## Recommended
-
-* [direnv](https://direnv.net/) / [posh-direnv](https://github.com/takekazuomi/posh-direnv)
-
-# ABOUT
-
-rez observes a few particular pain points of software development, including hidden bugs and vendor locking.
-
-In application code, these pain points are already managed with a variety of classic software techniques. For example, the C/C++ (native) programming languages illuminate many potential kinds of bugs and eliminate them at compile time. In terms of vendor locking, native documentation clarifies platform support. Native languages feature more predictable error handling semantics than shell scripts. And of course, compiled code runs faster than interpreted code.
-
-We want to bring this same rigor in applications, to build systems. For example, common shell-outs to `rm` / `del`... become `std::filesystem::remove_all` in C++.
-
-rez simply wraps your desired build tasks; These can be underlying cmake/make/autotools/etc. commands. rez offers some zero conf defaults, but in general promotes flexibility with the rest of the C/C++ ecosystem.
+See [example/](example) for more detail.
 
 # SEE ALSO
 
