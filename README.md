@@ -1,4 +1,4 @@
-# rez: a C++ task runner
+# rez: a C/C++ task runner
 
 Generate and retire artifacts, like so many tears in the rain...
 
@@ -32,7 +32,7 @@ FreeBSD
 
 # SUMMARY
 
-rez runs C++ tasks.
+rez runs C/C++ tasks.
 
 Where other runners depend on managing secondary DSL's, *rez* collapses the software stack. Application and build scripts: One programming language.
 
@@ -48,22 +48,21 @@ Where other runners depend on managing secondary DSL's, *rez* collapses the soft
  \3
 ```
 
-* a [C++](https://isocpp.org/) compiler, esp. C++17 or higher
+* a C/C++ 17 compiler
 
 ## Recommended
 
-* [cmake](https://cmake.org/)
 * [direnv](https://direnv.net/) / [posh-direnv](https://github.com/takekazuomi/posh-direnv)
 
 # ABOUT
 
 rez observes a few particular pain points of software development, including hidden bugs and vendor locking.
 
-In application code, these pain points are already managed with a variety of classic software techniques. For example, C++ illuminates many potential kinds of bugs and eliminate them at compile time. In terms of vendor locking, C++ documentation clarifies platform support. C++ features more predictable error handling semantics than shell scripts. And of course, C++ code runs faster than interpreted code.
+In application code, these pain points are already managed with a variety of classic software techniques. For example, the C/C++ (native) programming languages illuminate many potential kinds of bugs and eliminate them at compile time. In terms of vendor locking, native documentation clarifies platform support. Native languages feature more predictable error handling semantics than shell scripts. And of course, compiled code runs faster than interpreted code.
 
-We want to bring this same rigor in applications, to build systems. For example, common shell-outs to `rm` / `del`... become `std::filesystem::remove_all`.
+We want to bring this same rigor in applications, to build systems. For example, common shell-outs to `rm` / `del`... become `std::filesystem::remove_all` in C++.
 
-rez simply wraps your desired build tasks; These can be underlying cmake/make/autotools/etc. commands. rez offers some zero conf defaults, but in general promotes flexibility with the rest of the C++ ecosystem.
+rez simply wraps your desired build tasks; These can be underlying cmake/make/autotools/etc. commands. rez offers some zero conf defaults, but in general promotes flexibility with the rest of the C/C++ ecosystem.
 
 # SEE ALSO
 

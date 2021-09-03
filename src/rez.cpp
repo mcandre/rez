@@ -15,10 +15,22 @@
 #include <iostream>
 #include <optional>
 #include <sstream>
+#include <string>
+
+using std::literals::string_literals::operator""s;
 
 #include "rez/rez.hpp"
 
 namespace rez {
+std::ostream &operator<<(std::ostream &os, const Lang &o) {
+    switch (o) {
+    case Lang::Cpp:
+        return os << "C++";
+    default:
+        return os << "C";
+    }
+}
+
 std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     char *transient = nullptr;
 
@@ -137,19 +149,44 @@ bool DetectWindowsEnvironment() {
 
     windows = DetectWindowsEnvironment();
 
-    if (windows) {
-        compiler = DefaultCompilerWindows;
+    if (std::filesystem::exists(RezDefinitionPathCpp)) {
+        rez_definition_path = RezDefinitionPathCpp;
+        rez_definition_lang = Lang::Cpp;
+    } else if (std::filesystem::exists(RezDefinitionPathC)) {
+        rez_definition_path = RezDefinitionPathC;
+        rez_definition_lang = Lang::C;
     } else {
-        compiler = DefaultCompilerUnix;
+        std::cerr << "errno no such task definition file rez.cpp / rez.c" << std::endl;
+        return -1;
     }
 
-    const auto compiler_override = GetEnvironmentVariable(std::string("CXX"));
+    if (windows) {
+        compiler = DefaultCompilerWindows;
+    } else if (rez_definition_lang == Lang::Cpp) {
+        compiler = DefaultCompilerUnixCpp;
+    } else {
+        compiler = DefaultCompilerUnixC;
+    }
 
-    if (compiler_override.has_value()) {
-        const auto compiler_override_s = *compiler_override;
+    if (rez_definition_lang == Lang::Cpp) {
+        const auto compiler_override = GetEnvironmentVariable("CXX"s);
 
-        if (!compiler_override_s.empty()) {
-            compiler = compiler_override_s;
+        if (compiler_override.has_value()) {
+            const auto compiler_override_s = *compiler_override;
+
+            if (!compiler_override_s.empty()) {
+                compiler = compiler_override_s;
+            }
+        }
+    } else {
+        const auto compiler_override = GetEnvironmentVariable("CC"s);
+
+        if (compiler_override.has_value()) {
+            const auto compiler_override_s = *compiler_override;
+
+            if (!compiler_override_s.empty()) {
+                compiler = compiler_override_s;
+            }
         }
     }
 
@@ -183,14 +220,28 @@ bool DetectWindowsEnvironment() {
         }
     }
 
-    const auto flags_cxx_opt = rez::GetEnvironmentVariable("CXXFLAGS");
-    std::string flags_cxx;
+    std::string flags_cxx,
+                flags_c;
 
-    if (flags_cxx_opt.has_value()) {
-        const auto flags = *flags_cxx_opt;
+    if (rez_definition_lang == Lang::Cpp) {
+        const auto flags_cxx_opt = rez::GetEnvironmentVariable("CXXFLAGS");
 
-        if (!flags.empty()) {
-            flags_cxx = flags;
+        if (flags_cxx_opt.has_value()) {
+            const auto flags = *flags_cxx_opt;
+
+            if (!flags.empty()) {
+                flags_cxx = flags;
+            }
+        }
+    } else {
+        const auto flags_c_opt = rez::GetEnvironmentVariable("CFLAGS");
+
+        if (flags_c_opt.has_value()) {
+            const auto flags = *flags_c_opt;
+
+            if (!flags.empty()) {
+                flags_c = flags;
+            }
         }
     }
 
@@ -202,12 +253,15 @@ bool DetectWindowsEnvironment() {
             ss << " ";
         }
 
-        if (!flags_cxx.empty()) {
+        if (rez_definition_lang == Lang::Cpp && !flags_cxx.empty()) {
             ss << flags_cxx;
+            ss << " ";
+        } else if (rez_definition_lang == Lang::C && !flags_c.empty()) {
+            ss << flags_c;
             ss << " ";
         }
 
-        ss << RezFile;
+        ss << rez_definition_path;
         ss << " /link /out:";
         ss << artifact_file_path_s;
     } else {
@@ -220,12 +274,15 @@ bool DetectWindowsEnvironment() {
             ss << " ";
         }
 
-        if (!flags_cxx.empty()) {
+        if (rez_definition_lang == Lang::Cpp && !flags_cxx.empty()) {
             ss << flags_cxx;
+            ss << " ";
+        } else if (rez_definition_lang == Lang::C && !flags_c.empty()) {
+            ss << flags_c;
             ss << " ";
         }
 
-        ss << RezFile;
+        ss << rez_definition_path;
     }
 
     build_command = ss.str();
@@ -237,6 +294,8 @@ std::ostream &operator<<(std::ostream &os, const Config &o) {
               << ", cache_dir_path: " << o.cache_dir_path.string()
               << ", cache_file_path: " << o.cache_file_path.string()
               << ", windows: " << o.windows
+              << ", rez_definition_path: " << o.rez_definition_path.string()
+              << ", rez_definition_lang: " << o.rez_definition_lang
               << ", compiler: " << o.compiler
               << ", artifact_dir_path: " << o.artifact_dir_path.string()
               << ", artifact_file_path: " << o.artifact_file_path.string()

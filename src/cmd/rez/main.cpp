@@ -84,7 +84,7 @@ int main(int argc, const char **argv) {
     }
 
     bool artifact_cache_miss = !std::filesystem::exists(config.artifact_file_path) ||
-                               std::filesystem::last_write_time(config.artifact_file_path) < std::filesystem::last_write_time(rez::RezFile);
+                               std::filesystem::last_write_time(config.artifact_file_path) < std::filesystem::last_write_time(config.rez_definition_path);
 
     if (artifact_cache_miss) {
         std::filesystem::create_directories(config.artifact_dir_path);
@@ -98,7 +98,7 @@ int main(int argc, const char **argv) {
         const auto build_status = system(build_command.c_str());
 
         if (build_status != EXIT_SUCCESS) {
-            std::cerr << "error building task file: " << rez::RezFile << std::endl;
+            std::cerr << "error building task file: " << config.rez_definition_path.string() << std::endl;
             return build_status;
         }
     }

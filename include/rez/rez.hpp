@@ -20,9 +20,14 @@ namespace rez {
 static const char *Version = "0.0.1";
 
 /**
- * @brief RezFile denotes the path to the task definition source file.
+ * @brief RezDefinitionPathCpp denotes the path to a C++ task definition source file.
  */
-static const char *RezFile = "rez.cpp";
+static const char *RezDefinitionPathCpp = "rez.cpp";
+
+/**
+ * @brief RezDefinitionPathC denotes the path to a C task definition source file.
+ */
+static const char *RezDefinitionPathC = "rez.c";
 
 /**
  * @brief CacheDir denotes the path to the rez internal cache directory.
@@ -60,13 +65,22 @@ static const char *ArtifactBinaryUnix = "delegate-rez";
 static const char *DefaultCompilerWindows = "cl";
 
 /**
- * @brief DefaultCompilerUnix denotes the standard UNIX C++ compiler executable basename.
+ * @brief DefaultCompilerUnixCpp denotes the standard UNIX C++ compiler executable basename.
  *
  * The compiler may be overridden by supplying a non-blank value to the CXX environment variable.
  *
- * Custom flags may be passed to the compiler via a CPPFLAGS or CXXFLAGS environment variable.
+ * Custom flags may be passed to the compiler via a CPPFLAGS and/or CXXFLAGS environment variable.
  */
-static const char *DefaultCompilerUnix = "c++";
+static const char *DefaultCompilerUnixCpp = "c++";
+
+/**
+ * @brief DefaultCompilerUnixC denotes the standard UNIX C compiler executable basename.
+ *
+ * The compiler may be overridden by supplying a non-blank value to the CFLAGS environment variable.
+ *
+ * Custom flags may be passed to the compiler via a CPPFLAGS and/or CFLAGS environment variable.
+ */
+static const char *DefaultCompilerUnixC = "cc";
 
 /**
  * @brief MSVCToolchainQueryScript denotes the standard script which prepares environment variables for executing MSVC cl commands.
@@ -77,6 +91,30 @@ static const char *MSVCToolchainQueryScript = R"(C:\Program Files (x86)\Microsof
  * @brief DefaultArchitectureWindows denotes the default architecture for MSVC-generated binaries.
  */
 static const char *DefaultArchitectureMSVC = "x64";
+
+/**
+ * @brief Lang denotes a programming language.
+ */
+enum class Lang {
+    /**
+     * @brief Cpp denotes C++, object oriented C.
+     */
+    Cpp,
+
+    /**
+     * @brief C denotes C, the successor to BCPL.
+     */
+    C
+};
+
+/**
+ * @brief << formats a Lang to an ostream.
+ *
+ * @param os an output stream
+ * @param o a Lang
+ * @returns the output stream result
+ */
+std::ostream &operator<<(std::ostream &os, const Lang &o);
 
 /**
  * @brief GetEnvironmentVariable retrieves environment variables.
@@ -140,14 +178,39 @@ struct Config {
     bool windows = false;
 
     /**
+     * @brief rez_definition_path denotes the user's task definition source file. (Default: rez.cpp)
+     *
+     * If no rez.cpp file is present, then rez.c is checked as a fallback.
+     *
+     * Examples:
+     *
+     * * std::filesystem::path("rez.cpp")
+     * * std::filesystem::path("rez.c")
+     */
+    std::filesystem::path rez_definition_path;
+
+    /**
+     * @brief Lang denotes the programming language for the user's task definition source file. (Default: Lang::Cpp)
+     *
+     * Examples:
+     *
+     * * Lang::Cpp
+     * * Lang::C
+     */
+    Lang rez_definition_lang = Lang::Cpp;
+
+    /**
      * @brief compiler denotes the executable used to build the user task tree. (Default: Determined at runtime by @ref Load)
      *
      * Examples:
      *
      * * "c++"s
+     * * "cc"s
      * * "cl"s
      * * "clang++"s
+     * * "clang"s
      * * "g++"s
+     * * "gcc"s
      */
     std::string compiler;
 
