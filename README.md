@@ -76,6 +76,15 @@ rez works by compiling and executing your task definition source file.
 | C        | rez.c           |
 | C++      | rez.cpp         |
 
+## Example
+
+```console
+$ vi rez.cpp
+...
+
+$ rez
+```
+
 ## Triggering the task definition
 
 When we execute `rez <task names>`, then rez compiles your task definition to a binary `.rez/bin/delegate-rez[.exe]`. The delegate receives the task names, and processes them according to the task definition code.
