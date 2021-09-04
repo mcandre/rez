@@ -50,8 +50,8 @@ int main(int argc, const char **argv) {
         const auto arg = args[i];
 
         if (arg == "-c") {
-            std::cerr << "unimplemented" << std::endl;
-            return EXIT_FAILURE;
+            std::filesystem::remove_all(rez::CacheDir);
+            return EXIT_SUCCESS;
         }
 
         if (arg == "-d") {

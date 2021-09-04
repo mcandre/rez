@@ -64,6 +64,8 @@ Must be expensive.
 
 ```
 
+See `rez -h` for more options.
+
 ## Configuration
 
 1. Define your build tasks in a `rez.cpp` or `rez.c` file.
