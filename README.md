@@ -7,10 +7,6 @@
  \3
 ```
 
-# LICENSE
-
-FreeBSD
-
 # SUMMARY
 
 rez runs C/C++ tasks.
@@ -20,13 +16,21 @@ Where other runners depend on managing secondary DSL's, *rez* collapses the soft
 * Minimize environment bloat.
 * Maximize expressiveness.
 
+# LICENSE
+
+FreeBSD
+
 # RUNTIME REQUIREMENTS
 
-* a C/C++ 17 compiler
+* a C/C++ compiler
 
 ## Recommended
 
 * [direnv](https://direnv.net/) / [posh-direnv](https://github.com/takekazuomi/posh-direnv)
+
+# CONTRIBUTING
+
+For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 # ABOUT
 
