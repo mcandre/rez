@@ -80,10 +80,11 @@ rez works by compiling and executing your task definition source file.
 
 ```console
 $ vi rez.cpp
-...
 
 $ rez
 ```
+
+See `rez -d` to enable debugging output.
 
 ## Triggering the task definition
 
