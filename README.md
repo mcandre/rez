@@ -268,7 +268,7 @@ See the [example/](example) Athena owl application for more detail.
 
 rez provides a small set of flags such as `-c` (clear internal rez cache), which are not propagated to the task definition.
 
-For example, the steps to uninstall your app, then delete junk files, then reset the rez cache, look like:
+For example, we can run the tasks to uninstall the development edition of your app; then delete junk build files; then reset the internal rez cache, like:
 
 ```console
 $ rez uninstall
