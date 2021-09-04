@@ -13,8 +13,7 @@ rez runs C/C++ tasks.
 
 Where other runners depend on managing secondary DSL's, *rez* collapses the software stack. Implement your build scripts in the same language as your application.
 
-Minimize bloat.
-Maximize expressiveness.
+Maximize expressiveness, minimize bloat.
 
 # LICENSE
 
