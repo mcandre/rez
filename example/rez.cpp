@@ -73,7 +73,13 @@ static int clean() {
 }
 
 int main(int argc, const char **argv) {
+    const auto args = std::vector<std::string_view>{ argv + 1, argv + argc };
     const auto default_task = std::function<int()>(run);
+
+    if (args.empty()) {
+        return default_task();
+    }
+
     const auto tasks = std::map<std::string_view, std::function<int()>>{
         { "clean"sv, clean },
         { "clean_cmake"sv, clean_cmake },
@@ -82,12 +88,6 @@ int main(int argc, const char **argv) {
         { "build"sv, build },
         { "run"sv, run }
     };
-
-    const auto args = std::vector<std::string_view>{ argv + 1, argv + argc };
-
-    if (args.empty()) {
-        return default_task();
-    }
 
     if (args.front() == "-l") {
         for (const auto &[name, _] : tasks) {

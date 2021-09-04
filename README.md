@@ -15,7 +15,7 @@ Where other runners depend on managing secondary DSL's, *rez* collapses the soft
 
 Maximize expressiveness, minimize bloat.
 
-# EXAMPLE
+# DEMO
 
 ```console
 $ cd example
@@ -38,8 +38,6 @@ _-----`  |(,__,__/__/_ .
 Must be expensive.
 
 ```
-
-See `rez -h` for more options.
 
 # ABOUT
 
@@ -78,25 +76,116 @@ rez works by compiling and executing your task definition source file.
 | C        | rez.c           |
 | C++      | rez.cpp         |
 
-When the user runs `rez <task name>`..., then rez compilers your task definition and executes it.
+When we execute `rez <task names>`..., then rez compilers your task definition to a binary `.rez/bin/delegate-rez[.exe]`.
 
-At that point, rez hands off processing the task tree to your custom definition. rez forwards the `<task name>`... command line arguments into your task definition's `int main(int argc, char **argv)` entrypoint.
+The task definition compilation step is itself customizable. rez responds to environment variables like `CXX`, `CC`, `CPPFLAGS`, `CXXFLAGS`, and `CFLAGS` when building the task definition. See [include/](include) for more detail.
+
+Your task definition program has full control over the task tree. You can write your own specialized task tree processing algorithm, or simply chain tasks together with ordinary function calls.
+
+(Includes elided for brevity. For more detail, the example app contains fully qualified include directives.)
+
+```c++
+static int build() {
+    return system("cmake --build . --config Release");
+}
+
+static int run() {
+    // This run task depends on the build task.
+    const auto status = build();
+
+    if (status != EXIT_SUCCESS) {
+        return status;
+    }
+
+    // Locate application binary in an operating system portable manner.
+    return system((std::filesystem::path("bin") / "athena").string().c_str());
+}
+```
+
+After rez builds your task definition, rez executes it. At this point, your task definition program receives a copy of the `<task names>` flags into its main entrypoint. Your implementation should call the particular tasks, depending on which ones are passed in on the command line.
+
+```c++
+int main(int argc, const char **argv) {
+    const auto tasks = std::map<std::string_view, std::function<int()>>{
+        { "build"sv, build },
+        { "run"sv, run }
+    };
+
+    for (const auto &arg : args) {
+        try {
+            const auto f = tasks.at(arg);
+            const auto status = f();
+
+            if (status != EXIT_SUCCESS) {
+                return status;
+            }
+        } catch (std::out_of_range &e) {
+            std::cerr << "no such task: " << arg << std::endl;
+            return EXIT_FAILURE;
+        }
+    }
+
+    return EXIT_SUCCESS;
+}
+```
 
 ## Default task
 
-By convention, your task definition should default to running a specific task of your choice, when no arguments are supplied. This can be a task to `build` your application, or `test` your application, for example. So that `rez` with no arguments will do something you find useful for your project. This matches common practices with `make`, for example.
+By convention, your task definition should default to running a specific task of your choice, when no arguments are supplied. Similar to configurations for the `npm` task runer.
+
+This can be a task to `build` your application, or `test` your application, for example. Whichever custom task you find to be useful for your project.
+
+```c++
+int main(int argc, const char **argv) {
+    const auto args = std::vector<std::string_view>{ argv + 1, argv + argc };
+    const auto default_task = std::function<int()>(run);
+
+    if (args.empty()) {
+        return default_task();
+    }
+}
+```
 
 ## List tasks menu
 
-In addition to `<task name>`'s, rez may forward a `-l` (list tasks) flag to your task definition. rez expects your task definition to respond to `-l` by respond by listing out the names of your tasks. This matches common practice with `mage -l`, for example.
+In addition to `<task name>`'s, rez may forward a `-l` (list tasks) flag to your task definition. Similar to configurations for the `mage` task runner.
 
-## Install and Uninstall tasks
+rez expects your task definition to respond to `-l` by listing out the names of your tasks.
+
+```c++
+int main(int argc, const char **argv) {
+    const auto args = std::vector<std::string_view>{ argv + 1, argv + argc };
+
+    const auto tasks = std::map<std::string_view, std::function<int()>>{
+        { "build"sv, build },
+        { "run"sv, run }
+    };
+
+    if (args.front() == "-l") {
+        for (const auto &[name, _] : tasks) {
+            std::cout << name << std::endl;
+        }
+
+        return EXIT_SUCCESS;
+    }
+}
+```
+
+Trace:
+
+```console
+$ rez -l
+build
+run
+```
+
+## Clean, Install, and Uninstall tasks
 
 By convention, a project should implement a pair of `install` and `uninstall` tasks to automate the process of compiling and placing binaries into a semi-portable directory in `$PATH`. For example, have your `install` task invoke a `build` task, and then copy the resulting binary to `~/bin/<app>[.exe]`. Have your `uninstall` task delete this file.
 
-## Clean task
+By convention, a project should implement a `clean` task which removes any generated files, such as binaries, object files, or build tool junk files. The command should be idempotent, able to be run regardless of whether the files are already deleted. This helps contributors to quickly reset the project file tree back to a fresh state and reduce disk usage. Similar to the `make` task runner.
 
-By convention, a project should implement a `clean` task which removes any generated files, such as binaries, object files, or build tool junk files. The command should be idempotent, able to be run regardless of whether the files are already deleted. This helps contributors to quickly reset the project file tree back to a fresh state and reduce disk usage. This matches common practices with `make clean`, for example.
+See the [example/](example) Athena owl application for more detail.
 
 ## Clean internal rez cache
 
@@ -108,7 +197,7 @@ For example, the steps to uninstall your app, then delete junk files, then reset
 $ rez uninstall; rez clean; rez -c
 ```
 
-See the [example/](example) application for more detail.
+See `rez -h` for more options.
 
 # SEE ALSO
 
@@ -119,10 +208,10 @@ See the [example/](example) application for more detail.
 * [dale](https://github.com/mcandre/dale), a D task runner
 * [ejm98](http://www.ascii-art.de/ascii/mno/owl.txt) for Athena's prior artwork
 * [Gradle](https://gradle.org/) / [Maven](https://maven.apache.org/) / [Ant](https://ant.apache.org/), preiminent JVM build tools
-* [Grunt](https://gruntjs.com/), a Node.js task runner
 * [GNU make](https://www.gnu.org/software/make/) / [BSD make](https://www.freebsd.org/cgi/man.cgi?make(1)), classic task runners
 * [lake](https://luarocks.org/modules/steved/lake), a Lua task runner
 * [mage](https://magefile.org/), a preiminent Go task runner
+* [npm](https://www.npmjs.com/), [Grunt](https://gruntjs.com/), Node.js task runners
 * [rake](https://ruby.github.io/rake/), a preiminent Ruby task runner
 * Not to be confused with [Rezz](http://officialrezz.com/), a preiminent DJ
 * [sail](https://github.com/mcandre/sail), a fast C/C++ source file identifier
