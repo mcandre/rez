@@ -76,9 +76,13 @@ rez works by compiling and executing your task definition source file.
 | C        | rez.c           |
 | C++      | rez.cpp         |
 
-When we execute `rez <task names>`..., then rez compilers your task definition to a binary `.rez/bin/delegate-rez[.exe]`.
+When we execute `rez <task names>`..., then rez compiles your task definition to a binary `.rez/bin/delegate-rez[.exe]`. The task definition compilation step is itself customizable.
 
-The task definition compilation step is itself customizable. rez responds to environment variables like `CXX`, `CC`, `CPPFLAGS`, `CXXFLAGS`, and `CFLAGS` when building the task definition. See [include/](include) for more detail.
+rez automatically discovers the available compiler toolchain. Similar to the `cmake` task runner.
+
+For example, in Windows (COMSPEC), rez uses `vcvars.bat` to enable an MSVC cl.exe environment. On UNIX systems like Linux and macOS, rez applies the active `c++` or `cc` compiler, depending on the task definition language.
+
+rez responds to common C/C++ build environment variables including `CXX`, `CC`, `CPPFLAGS`, `CXXFLAGS`, and `CFLAGS` when building the task definition. See [include/](include) for more detail.
 
 Your task definition program has full control over the task tree. You can write your own specialized task tree processing algorithm, or simply chain tasks together with ordinary function calls.
 
