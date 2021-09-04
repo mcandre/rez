@@ -246,13 +246,16 @@ struct Config {
     /**
      * @brief ApplyMSVCToolchain loads MSVC environment variables for cl into the current process.
      *
+     * @throws an error in the event of a problem
      */
-    [[nodiscard]] int ApplyMSVCToolchain() const;
+    void ApplyMSVCToolchain() const;
 
     /**
      * @brief Load populates build parameters according to the documented defaults and override mechanisms.
+     *
+     * @throws an error in the event of a problem
      */
-    [[nodiscard]] int Load();
+    void Load();
 };
 
 /**

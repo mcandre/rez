@@ -69,7 +69,7 @@ bool DetectWindowsEnvironment() {
     return GetEnvironmentVariable("COMSPEC").has_value();
 }
 
-[[nodiscard]] int Config::ApplyMSVCToolchain() const {
+void Config::ApplyMSVCToolchain() const {
     std::filesystem::create_directories(CacheDir);
 
     if (!std::filesystem::exists(cache_file_path)) {
@@ -91,8 +91,7 @@ bool DetectWindowsEnvironment() {
         FILE *process = popen(query_command.c_str(), "r");
 
         if (process == nullptr) {
-            std::cerr << "error launching msvc query command: " << query_command << std::endl;
-            return -1;
+            throw "error launching msvc query command: "s + query_command;
         }
 
         auto cache_writer = std::ofstream();
@@ -111,8 +110,11 @@ bool DetectWindowsEnvironment() {
         const auto query_status = pclose(process);
 
         if (query_status != EXIT_SUCCESS) {
-            std::cerr << "error processing msvc query command. status: " << query_status << std::endl;
-            return -1;
+            std::stringstream err;
+            err << "error running query command: "
+                << query_command
+                << " status: " << query_status;
+            throw err.str();
         }
     }
 
@@ -133,17 +135,21 @@ bool DetectWindowsEnvironment() {
         errno = 0;
         if (setenv(key.c_str(), value.c_str(), 1) != 0) {
 #endif
-            std::cerr << "error applying environment variable " << line << " errno: " << errno << std::endl;
             cache_reader.close();
-            return -1;
+
+            std::stringstream err;
+            err << "error applying environment variable key=value pair: "
+                << line
+                << " errno: "s
+                << errno;
+            throw err.str();
         }
     }
 
     cache_reader.close();
-    return 0;
 }
 
-[[nodiscard]] int Config::Load() {
+void Config::Load() {
     cache_dir_path = std::filesystem::path(CacheDir);
     cache_file_path = cache_dir_path / CacheFileBasename;
 
@@ -156,8 +162,7 @@ bool DetectWindowsEnvironment() {
         rez_definition_path = RezDefinitionPathC;
         rez_definition_lang = Lang::C;
     } else {
-        std::cerr << "errno no such task definition file rez.cpp / rez.c" << std::endl;
-        return -1;
+        throw "error locating a task definition file rez.{cpp,c}";
     }
 
     if (windows) {
@@ -190,9 +195,8 @@ bool DetectWindowsEnvironment() {
         }
     }
 
-    if (compiler == DefaultCompilerWindows && ApplyMSVCToolchain() < 0) {
-        std::cerr << "error applying msvc toolchain" << std::endl;
-        return -1;
+    if (compiler == DefaultCompilerWindows) {
+        ApplyMSVCToolchain();
     }
 
     artifact_dir_path = cache_dir_path / std::filesystem::path(ArtifactDirBasename);
@@ -286,7 +290,6 @@ bool DetectWindowsEnvironment() {
     }
 
     build_command = ss.str();
-    return 0;
 }
 
 std::ostream &operator<<(std::ostream &os, const Config &o) {

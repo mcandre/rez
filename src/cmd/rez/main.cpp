@@ -74,8 +74,10 @@ int main(int argc, const char **argv) {
 
     const auto rest = std::vector<std::string_view>{ args.begin() + i, args.end() };
 
-    if (config.Load() < 0) {
-        std::cerr << "error loading config" << std::endl;
+    try {
+        config.Load();
+    } catch (const std::string &err) {
+        std::cerr << err << std::endl;
         return EXIT_FAILURE;
     }
 
