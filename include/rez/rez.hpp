@@ -88,9 +88,9 @@ static const char *DefaultCompilerUnixC = "cc";
 static const char *MSVCToolchainQueryScript = R"(C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat)";
 
 /**
- * @brief DefaultArchitectureWindows denotes the default architecture for MSVC-generated binaries.
+ * @brief ArchitectureMsvcAmd64 denotes the amd64 architecture in MSVC nomenclature.
  */
-static const char *DefaultArchitectureMSVC = "x64";
+static const char *ArchitectureMsvcAmd64 = "x64";
 
 /**
  * @brief Lang denotes a programming language.
@@ -245,6 +245,8 @@ struct Config {
 
     /**
      * @brief ApplyMSVCToolchain loads MSVC environment variables for cl into the current process.
+     *
+     * By default, the target architecture x64 is assumed. Set a environment variable REZ_ARCH to override.
      *
      * @throws an error in the event of a problem
      */
