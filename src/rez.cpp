@@ -72,8 +72,16 @@ bool DetectWindowsEnvironment() {
 void Config::ApplyMSVCToolchain() const {
     std::filesystem::create_directories(CacheDir);
 
-    if (!std::filesystem::exists(cache_file_path)) {
-        std::cerr << "querying msvc toolchain..." << std::endl;
+    auto cache = std::fstream();
+    cache.open(cache_file_path);
+
+    std::error_code ec;
+    const std::uintmax_t cache_size = std::filesystem::file_size(cache_file_path, ec);
+
+    if (cache_size == static_cast<std::uintmax_t>(-1) || cache_size == 0) {
+        if (debug) {
+            std::cerr << "querying msvc toolchain..." << std::endl;
+        }
 
         std::stringstream ss;
         ss << R"(cmd.exe /c "")";
@@ -94,36 +102,33 @@ void Config::ApplyMSVCToolchain() const {
             throw "error launching msvc query command: "s + query_command;
         }
 
-        auto cache_writer = std::ofstream();
-        cache_writer.open(cache_file_path);
-
         // https://devblogs.microsoft.com/oldnewthing/20100203-00/?p=15083#:~:text=The%20theoretical%20maximum%20length%20of,a%20limit%20of%2032767%20characters.
         char line[32760] = { 0 };
 
         while (fgets(line, sizeof(line), process) != nullptr) {
             if (strchr(line, '=') != nullptr) {
-                cache_writer << line;
+                cache << line;
             }
         }
 
-        cache_writer.close();
         const auto query_status = pclose(process);
 
         if (query_status != EXIT_SUCCESS) {
+            cache.close();
+
             std::stringstream err;
             err << "error running query command: "
                 << query_command
                 << " status: " << query_status;
             throw err.str();
         }
-    }
 
-    auto cache_reader = std::ifstream();
-    cache_reader.open(cache_file_path);
+        cache.seekg(0);
+    }
 
     std::string line;
 
-    while (getline(cache_reader, line)) {
+    while (getline(cache, line)) {
 #if defined(_MSC_VER)
         errno = 0;
         if (_putenv(line.c_str()) != 0) {
@@ -135,7 +140,7 @@ void Config::ApplyMSVCToolchain() const {
         errno = 0;
         if (setenv(key.c_str(), value.c_str(), 1) != 0) {
 #endif
-            cache_reader.close();
+            cache.close();
 
             std::stringstream err;
             err << "error applying environment variable key=value pair: "
@@ -146,7 +151,7 @@ void Config::ApplyMSVCToolchain() const {
         }
     }
 
-    cache_reader.close();
+    cache.close();
 }
 
 void Config::Load() {
