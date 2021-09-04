@@ -76,9 +76,12 @@ rez works by compiling and executing your task definition source file.
 | C        | rez.c           |
 | C++      | rez.cpp         |
 
-## Example
+Edit a task definition file at the top level of your project directory.
+
+Example:
 
 ```console
+$ cd <your project>
 $ vi rez.cpp
 
 $ rez
@@ -88,13 +91,13 @@ See `rez -d` to enable debugging output.
 
 ## Triggering the task definition
 
-When we execute `rez [<task names>]`, then rez compiles your task definition to a binary `.rez/bin/delegate-rez[.exe]`. Then rez executes the delegate, triggering your task definition's `main()` entrypoint. From there, it's all your control flow.
+When we execute `rez [<task names>]`, then rez compiles your task definition to a binary `bin/delegate-rez[.exe]` inside of the `.rez` cache directory. Then rez executes the delegate, triggering your task definition's `main()` entrypoint. From there, it's all your control flow.
 
 ### Task definition build settings
 
 rez queries standard locations to automatically infer the compiler toolchain, similar to the `cmake` task runner.
 
-For example, in Windows (COMSPEC), rez uses `vcvars.bat` to enable an MSVC cl.exe environment.
+For example, in Windows (COMSPEC), rez uses `vcvars.bat` to enable an MSVC cl.exe environment. rez caches a copy of the MSVC environment variable pairs in `.rez\rez-env.txt`, so that successive `rez` commands run faster.
 
 On UNIX systems like Linux and macOS, rez applies the active `c++` or `cc` compiler, depending on the task definition language.
 
@@ -268,7 +271,11 @@ rez provides a small set of flags such as `-c` (clear internal rez cache), which
 For example, the steps to uninstall your app, then delete junk files, then reset the rez cache, look like:
 
 ```console
-$ rez uninstall; rez clean; rez -c
+$ rez uninstall
+
+$ rez clean
+
+$ rez -c
 ```
 
 See `rez -h` for more options.
