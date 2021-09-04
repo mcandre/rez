@@ -52,7 +52,6 @@ std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     }
 
     free(transient);
-    return std::nullopt;
 #else
     transient = getenv(key.c_str());
 

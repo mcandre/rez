@@ -1,7 +1,7 @@
 # BUILDTIME REQUIREMENTS
 
 * a C/C++ 17 compiler
-* [cmake](https://cmake.org/)
+* [cmake](https://cmake.org/) 3+
 
 ## Recommended
 
@@ -19,6 +19,18 @@
 ```console
 $ cmake .
 $ cmake --build . --config Release
+```
+
+# INSTALL
+
+```console
+$ cmake --build . --target install
+```
+
+# UNINSTALL
+
+```console
+$ cmake --build . --target uninstall
 ```
 
 # LINT
