@@ -88,9 +88,11 @@ See `rez -d` to enable debugging output.
 
 ## Triggering the task definition
 
-When we execute `rez [<task names>]`, then rez compiles your task definition to a binary `.rez/bin/delegate-rez[.exe]`. The delegate receives the task names, and processes them according to the task definition code.
+When we execute `rez [<task names>]`, then rez compiles your task definition to a binary `.rez/bin/delegate-rez[.exe]`. Then rez executes the delegate, triggering your task definition's `main()` entrypoint. From there, it's all your control flow.
 
-rez automatically discovers the available compiler toolchain. Similar to the `cmake` task runner.
+### Task definition build settings
+
+rez queries standard locations to automatically infer the compiler toolchain, similar to the `cmake` task runner.
 
 For example, in Windows (COMSPEC), rez uses `vcvars.bat` to enable an MSVC cl.exe environment.
 
