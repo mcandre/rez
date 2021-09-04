@@ -83,7 +83,14 @@ void Config::ApplyMSVCToolchain() const {
             std::cerr << "querying msvc toolchain..." << std::endl;
         }
 
-        std::string arch = ArchitectureMsvcAmd64;
+        auto query_path = std::string(DefaultMSVCToolchainQueryScript);
+        const auto query_path_override = GetEnvironmentVariable("REZ_TOOLCHAIN_QUERY_PATH");
+
+        if (query_path_override.has_value()) {
+            query_path = *query_path_override;
+        }
+
+        auto arch = std::string(ArchitectureMsvcAmd64);
         const auto arch_override = GetEnvironmentVariable("REZ_ARCH");
 
         if (arch_override.has_value()) {
@@ -92,7 +99,7 @@ void Config::ApplyMSVCToolchain() const {
 
         std::stringstream ss;
         ss << R"(cmd.exe /c "")";
-        ss << MSVCToolchainQueryScript;
+        ss << query_path;
         ss << R"(" )";
         ss << arch;
         ss << R"( && set")";

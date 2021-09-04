@@ -83,9 +83,11 @@ static const char *DefaultCompilerUnixCpp = "c++";
 static const char *DefaultCompilerUnixC = "cc";
 
 /**
- * @brief MSVCToolchainQueryScript denotes the standard script which prepares environment variables for executing MSVC cl commands.
+ * @brief DefaultMSVCToolchainQueryScript denotes the standard script which prepares environment variables for executing MSVC cl commands.
+ *
+ * To override this, set a REZ_TOOLCHAIN_QUERY_PATH environment variable.
  */
-static const char *MSVCToolchainQueryScript = R"(C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat)";
+static const char *DefaultMSVCToolchainQueryScript = R"(C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat)";
 
 /**
  * @brief ArchitectureMsvcAmd64 denotes the amd64 architecture in MSVC nomenclature.

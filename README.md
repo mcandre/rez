@@ -34,13 +34,9 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 
 # ABOUT
 
-rez observes a few particular pain points of software development, including hidden bugs and vendor locking.
+rez allows developers to write build tasks in pure C/C++ code. This streamlines software builds. For example, common shell-outs to `rm` / `del`... become `std::filesystem::remove_all` in C++. You can drop many of these shell outs and gain faster, more reliable builds.
 
-In application code, these pain points are already managed with a variety of classic software techniques. For example, the C/C++ (native) programming languages illuminate many potential kinds of bugs and eliminate them at compile time. In terms of vendor locking, native documentation clarifies platform support. Native languages feature more predictable error handling semantics than shell scripts. And of course, compiled code runs faster than interpreted code.
-
-We want to bring this same rigor in applications, to build systems. For example, common shell-outs to `rm` / `del`... become `std::filesystem::remove_all` in C++.
-
-rez is build tool agnostic: It simply wraps your traditional build tool of choice. For example, rez tasks can invoke direct compiler commands, or cmake/make/autotools/etc.
+rez is *build tool agnostic*. rez simply wraps your traditional build tool of choice. For example, rez tasks can invoke direct compiler commands like `gcc`, or invoke an underlying build tool like `cmake`, `make`, `./configure`, `msbuild`, etc.
 
 Generate and retire artifacts, like so many tears in the rain...
 
