@@ -87,7 +87,7 @@ $ rez
 
 ## Triggering the task definition
 
-When we execute `rez <task names>`, then rez compiles your task definition to a binary `.rez/bin/delegate-rez[.exe]`. The delegate receives the task names, and processes them according to the task definition code.
+When we execute `rez [<task names>]`, then rez compiles your task definition to a binary `.rez/bin/delegate-rez[.exe]`. The delegate receives the task names, and processes them according to the task definition code.
 
 rez automatically discovers the available compiler toolchain. Similar to the `cmake` task runner. For example, in Windows (COMSPEC), rez uses `vcvars.bat` to enable an MSVC cl.exe environment. On UNIX systems like Linux and macOS, rez applies the active `c++` or `cc` compiler, depending on the task definition language.
 
