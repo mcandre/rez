@@ -266,7 +266,7 @@ See the [example/](example) Athena owl application for more detail.
 
 ## Clean internal rez cache
 
-rez provides a small set of flags such as `-c` (clear internal rez cache), which are not propagated to the task definition.
+rez provides a built-in flag `-c` (clear internal rez cache).
 
 ```console
 $ rez -c
