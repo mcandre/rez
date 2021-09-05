@@ -31,6 +31,16 @@ std::ostream &operator<<(std::ostream &os, const Lang &o) {
     }
 }
 
+std::filesystem::path ApplyBinaryExtension(const std::filesystem::path &basename, bool windows) {
+    std::filesystem::path path(basename);
+
+    if (windows) {
+        path += ".exe";
+    }
+
+    return path;
+}
+
 std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     char *transient = nullptr;
 
@@ -82,14 +92,14 @@ void Config::ApplyMSVCToolchain() const {
             std::cerr << "querying msvc toolchain..." << std::endl;
         }
 
-        auto query_path = std::string(DefaultMSVCToolchainQueryScript);
+        std::string query_path(DefaultMSVCToolchainQueryScript);
         const auto query_path_override = GetEnvironmentVariable("REZ_TOOLCHAIN_QUERY_PATH");
 
         if (query_path_override.has_value()) {
             query_path = *query_path_override;
         }
 
-        auto arch = std::string(ArchitectureMsvcAmd64);
+        std::string arch(ArchitectureMsvcAmd64);
         const auto arch_override = GetEnvironmentVariable("REZ_ARCH");
 
         if (arch_override.has_value()) {
@@ -168,30 +178,24 @@ void Config::ApplyMSVCToolchain() const {
 }
 
 void Config::Load() {
-    cache_dir_path = std::filesystem::path(CacheDir);
-    cache_file_path = cache_dir_path / CacheFileBasename;
-
     windows = DetectWindowsEnvironment();
 
-    if (std::filesystem::exists(RezDefinitionPathCpp)) {
-        rez_definition_path = RezDefinitionPathCpp;
-        rez_definition_lang = Lang::Cpp;
-    } else if (std::filesystem::exists(RezDefinitionPathC)) {
-        rez_definition_path = RezDefinitionPathC;
-        rez_definition_lang = Lang::C;
-    } else {
-        throw "error locating a task definition file rez.{cpp,c}";
+    if (!std::filesystem::exists(TaskDefinitionCpp)) {
+        if (std::filesystem::exists(TaskDefinitionC)) {
+            task_definition_path = TaskDefinitionC;
+            task_definition_lang = Lang::C;
+        } else {
+            throw "error locating a task definition file rez.{cpp,c}"s;
+        }
     }
 
     if (windows) {
         compiler = DefaultCompilerWindows;
-    } else if (rez_definition_lang == Lang::Cpp) {
-        compiler = DefaultCompilerUnixCpp;
-    } else {
+    } else if (task_definition_lang == Lang::C) {
         compiler = DefaultCompilerUnixC;
     }
 
-    if (rez_definition_lang == Lang::Cpp) {
+    if (task_definition_lang == Lang::Cpp) {
         const auto compiler_override = GetEnvironmentVariable("CXX"s);
 
         if (compiler_override.has_value()) {
@@ -217,15 +221,10 @@ void Config::Load() {
         ApplyMSVCToolchain();
     }
 
-    artifact_dir_path = cache_dir_path / std::filesystem::path(ArtifactDirBasename);
-
-    auto executable = std::filesystem::path(ArtifactBinaryUnix);
-
-    if (windows) {
-        executable += ".exe";
-    }
-
-    artifact_file_path = artifact_dir_path / executable;
+    artifact_file_path = ApplyBinaryExtension(
+        artifact_dir_path / ArtifactFileBasenameUnix,
+        windows
+    );
 
     std::stringstream ss;
     ss << compiler;
@@ -245,7 +244,7 @@ void Config::Load() {
     std::string flags_cxx,
                 flags_c;
 
-    if (rez_definition_lang == Lang::Cpp) {
+    if (task_definition_lang == Lang::Cpp) {
         const auto flags_cxx_opt = rez::GetEnvironmentVariable("CXXFLAGS");
 
         if (flags_cxx_opt.has_value()) {
@@ -275,15 +274,15 @@ void Config::Load() {
             ss << " ";
         }
 
-        if (rez_definition_lang == Lang::Cpp && !flags_cxx.empty()) {
+        if (task_definition_lang == Lang::Cpp && !flags_cxx.empty()) {
             ss << flags_cxx;
             ss << " ";
-        } else if (rez_definition_lang == Lang::C && !flags_c.empty()) {
+        } else if (task_definition_lang == Lang::C && !flags_c.empty()) {
             ss << flags_c;
             ss << " ";
         }
 
-        ss << rez_definition_path;
+        ss << task_definition_path;
         ss << " /link /out:";
         ss << artifact_file_path_s;
     } else {
@@ -296,27 +295,26 @@ void Config::Load() {
             ss << " ";
         }
 
-        if (rez_definition_lang == Lang::Cpp && !flags_cxx.empty()) {
+        if (task_definition_lang == Lang::Cpp && !flags_cxx.empty()) {
             ss << flags_cxx;
             ss << " ";
-        } else if (rez_definition_lang == Lang::C && !flags_c.empty()) {
+        } else if (task_definition_lang == Lang::C && !flags_c.empty()) {
             ss << flags_c;
             ss << " ";
         }
 
-        ss << rez_definition_path;
+        ss << task_definition_path;
     }
 
     build_command = ss.str();
 }
 
 std::ostream &operator<<(std::ostream &os, const Config &o) {
-    return os << "{ debug: " << o.debug
-              << ", cache_dir_path: " << o.cache_dir_path.string()
-              << ", cache_file_path: " << o.cache_file_path.string()
+    return os << "{ cache_file_path: " << o.cache_file_path
+              << ", debug: " << o.debug
               << ", windows: " << o.windows
-              << ", rez_definition_path: " << o.rez_definition_path.string()
-              << ", rez_definition_lang: " << o.rez_definition_lang
+              << ", task_definition_path: " << o.task_definition_path.string()
+              << ", task_definition_lang: " << o.task_definition_lang
               << ", compiler: " << o.compiler
               << ", artifact_dir_path: " << o.artifact_dir_path.string()
               << ", artifact_file_path: " << o.artifact_file_path.string()
