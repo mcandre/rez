@@ -3,7 +3,7 @@
  */
 
 #include <cstdio>
-#if defined(_MSC_VER)
+#if defined(_WIN32)
 #define pclose _pclose
 #define popen _popen
 #endif
@@ -44,7 +44,7 @@ std::filesystem::path ApplyBinaryExtension(const std::filesystem::path &basename
 std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     char *transient = nullptr;
 
-#if defined(_MSC_VER)
+#if defined(_WIN32)
     auto len = size_t(0);
     errno = 0;
     _dupenv_s(&transient, &len, key.c_str());
@@ -152,7 +152,7 @@ void Config::ApplyMSVCToolchain() const {
     std::string line;
 
     while (getline(cache, line)) {
-#if defined(_MSC_VER)
+#if defined(_WIN32)
         errno = 0;
         if (_putenv(line.c_str()) != 0) {
 #else
