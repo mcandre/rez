@@ -204,3 +204,5 @@ rez provides a built-in flag `-c` (clear internal rez cache).
 ```console
 $ rez -c
 ```
+
+See `rez -h` for more options.
