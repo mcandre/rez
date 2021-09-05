@@ -13,12 +13,12 @@ Example:
 
 ```console
 $ cd <your project>
+
 $ vi rez.cpp
 
 $ rez
+<running your tasks...>
 ```
-
-See `rez -h` for more options.
 
 ## Triggering the task definition
 
