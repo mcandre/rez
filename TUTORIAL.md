@@ -18,7 +18,7 @@ $ vi rez.cpp
 $ rez
 ```
 
-See `rez -d` to enable debugging output.
+See `rez -h` for more options.
 
 ## Triggering the task definition
 
@@ -204,5 +204,3 @@ rez provides a built-in flag `-c` (clear internal rez cache).
 ```console
 $ rez -c
 ```
-
-See `rez -h` for more options.
