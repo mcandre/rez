@@ -47,6 +47,10 @@ rez allows developers to write build tasks in pure C/C++ code. This streamlines 
 
 rez is *build tool agnostic*. rez simply wraps your traditional build tool of choice. For example, rez tasks can invoke direct compiler commands like `gcc`, or invoke an underlying build tool like `cmake`, `make`, `./configure`, `msbuild`, etc.
 
+# DOCUMENTATION
+
+https://mcandre.github.io/rez/
+
 # LICENSE
 
 FreeBSD
