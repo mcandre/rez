@@ -210,6 +210,7 @@ static int clean_msvc() {
 }
 
 static int clean_cmake() {
+    // std::filesystem::remove_all("install_manifest.txt");
     // std::filesystem::remove_all("bin");
     // std::filesystem::remove_all("Makefile");
     // std::filesystem::remove_all("CMakeFiles");
