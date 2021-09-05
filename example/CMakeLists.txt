@@ -24,3 +24,22 @@ endif()
 include_directories(include)
 
 add_executable(athena athena.cpp)
+
+if(MSVC)
+    set(HOME "$ENV{HOMEDRIVE}$ENV{HOMEPATH}")
+    set(ARTIFACT athena.exe)
+else()
+    set(HOME "$ENV{HOME}")
+    set(ARTIFACT athena)
+endif()
+
+file(TO_NATIVE_PATH "${HOME}/bin" INSTALL_DIR)
+file(TO_NATIVE_PATH "${INSTALL_DIR}/${ARTIFACT}" INSTALL_FILE)
+
+install(PROGRAMS $<TARGET_FILE:athena> DESTINATION "${INSTALL_DIR}")
+
+if(MSVC)
+    add_custom_target(uninstall COMMAND del /s /q "${INSTALL_FILE}")
+else()
+    add_custom_target(uninstall COMMAND rm -f "${INSTALL_FILE}")
+endif()

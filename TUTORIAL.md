@@ -20,11 +20,13 @@ $ rez
 <running your tasks...>
 ```
 
-## Triggering the task definition
+This yields a cache directory `.rez`, which you will want to exclude from our version control system (e.g. with `.gitignore`).
+
+# OVERVIEW
 
 When we execute `rez [<task names>]`, then rez compiles your task definition to a binary `bin/delegate-rez[.exe]` inside of the `.rez` cache directory. Then rez executes the delegate, triggering your task definition's `main()` entrypoint. From there, it's all your control flow.
 
-### Task definition compilation settings
+# TASK DEFINITION COMPILATION
 
 rez automatically infers a default compiler toolchain, similar to the `cmake` task runner.
 
@@ -36,7 +38,7 @@ rez responds to common C/C++ build environment variables including `CXX`, `CC`, 
 
 For more information on customizing the task definition compilation step, see [include/](include).
 
-## Defining custom tasks
+# CUSTOM TASKS
 
 Your task definition program has full control over the task tree.
 
@@ -93,7 +95,7 @@ int main(int argc, const char **argv) {
 }
 ```
 
-## Default task
+# DEFAULT TASK
 
 By convention, a task definition should feature a default task, which executes when no arguments are supplied. Similar to configuration for the `npm` task runer.
 
@@ -111,7 +113,7 @@ int main(int argc, const char **argv) {
 }
 ```
 
-## List tasks menu
+# LIST TASKS MENU
 
 In addition to `<task name>`'s, rez may forward a `-l` (list tasks) flag to your task definition. Similar to configurations for the `mage` task runner.
 
@@ -144,9 +146,37 @@ build
 run
 ```
 
-## Clean, Install, and Uninstall tasks
+# INSTALL & UNINSTALL TASKS
 
 By convention, a project should implement a pair of `install` and `uninstall` tasks to automate the process of compiling and placing binaries into a semi-portable directory in `$PATH`. For example, have your `install` task invoke a `build` task, and then copy the resulting binary to `~/bin/<app>[.exe]`. Have your `uninstall` task delete this file.
+
+```c++
+static int cmake_init() {
+    return system("cmake .");
+}
+
+static int install() {
+    const auto status = build();
+
+    if (status != EXIT_SUCCESS) {
+        return status;
+    }
+
+    return system("cmake --build . --target install");
+}
+
+static int uninstall() {
+    const auto status = cmake_init();
+
+    if (status != EXIT_SUCCESS) {
+        return status;
+    }
+
+    return system("cmake --build . --target uninstall");
+}
+```
+
+# CLEAN TASK
 
 By convention, a project should implement a `clean` task which removes any generated files, such as binaries, object files, or build tool junk files. Similar to the `make` task runner.
 
@@ -197,9 +227,7 @@ static int clean() {
 
 See the [example/](example) Athena owl application for more detail.
 
-## Clean internal rez cache
-
-rez provides a built-in flag `-c` (clear internal rez cache).
+# CLEAN INTERNAL REZ CACHE
 
 ```console
 $ rez -c

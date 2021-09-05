@@ -24,14 +24,34 @@ static int build() {
     return system("cmake --build . --config Release");
 }
 
-static int run() {
+static int install() {
     const auto status = build();
 
     if (status != EXIT_SUCCESS) {
         return status;
     }
 
-    return system((std::filesystem::path("bin") / "athena").string().c_str());
+    return system("cmake --build . --target install");
+}
+
+static int uninstall() {
+    const auto status = cmake_init();
+
+    if (status != EXIT_SUCCESS) {
+        return status;
+    }
+
+    return system("cmake --build . --target uninstall");
+}
+
+static int run() {
+    const auto status = install();
+
+    if (status != EXIT_SUCCESS) {
+        return status;
+    }
+
+    return system("athena");
 }
 
 static int clean_msvc() {
@@ -86,7 +106,9 @@ int main(int argc, const char **argv) {
         { "clean_msvc"sv, clean_msvc },
         { "cmake_init"sv, cmake_init },
         { "build"sv, build },
-        { "run"sv, run }
+        { "install"sv, install },
+        { "run"sv, run },
+        { "uninstall"sv, uninstall }
     };
 
     if (args.front() == "-l") {
