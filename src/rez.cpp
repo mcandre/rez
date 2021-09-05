@@ -168,7 +168,7 @@ void Config::ApplyMSVCToolchain() const {
             std::stringstream err;
             err << "error applying environment variable key=value pair: "
                 << line
-                << " errno: "s
+                << " errno: "
                 << errno;
             throw err.str();
         }
