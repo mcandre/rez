@@ -56,7 +56,7 @@ std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     }
 
     if (transient != nullptr) {
-        const auto s = std::string(transient);
+        const std::string s(transient);
         free(transient);
         return std::optional(s);
     }
@@ -66,7 +66,7 @@ std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     transient = getenv(key.c_str());
 
     if (transient != nullptr) {
-        const auto s = std::string(transient);
+        const std::string s(transient);
         return std::optional(s);
     }
 #endif
