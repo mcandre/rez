@@ -36,8 +36,6 @@ On UNIX systems like Linux and macOS, rez applies the active `c++` or `cc` compi
 
 rez responds to common C/C++ build environment variables including `CXX`, `CC`, `CPPFLAGS`, `CXXFLAGS`, and `CFLAGS` when building the task definition.
 
-For more information on customizing the task definition compilation step, see [include/](include).
-
 # CUSTOM TASKS
 
 Your task definition program has full control over the task tree.

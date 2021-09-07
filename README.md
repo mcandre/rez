@@ -49,7 +49,7 @@ rez is *build tool agnostic*. rez simply wraps your traditional build tool of ch
 
 # DOCUMENTATION
 
-See [rez/rez.hpp](include/rez/rez.hpp).
+https://mcandre.github.io/rez/
 
 # LICENSE
 
