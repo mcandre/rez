@@ -12,6 +12,7 @@
 * [cpplint](https://pypi.org/project/cpplint/)
 * [Doxygen](https://www.doxygen.nl/index.html)
 * [sail](https://github.com/mcandre/sail)
+* [snek](https://github.com/mcandre/snek) 0.0.1
 * [vera++](https://bitbucket.org/verateam/vera/wiki/Home)
 
 # BUILD
@@ -39,8 +40,21 @@ $ cmake --build . --target uninstall
 $ cmake --build . --target lint
 ```
 
+# DOCUMENT
+
+```console
+# cmake --build . --target doc
+$ karp html/index.html
+```
+
+# PORT
+
+```console
+$ snek
+```
+
 # CLEAN
 
 ```console
-$ ./clean-cmake.sh
+$ ./clean.sh
 ```

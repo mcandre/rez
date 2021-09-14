@@ -51,6 +51,10 @@ rez is *build tool agnostic*. rez simply wraps your traditional build tool of ch
 
 https://mcandre.github.io/rez/
 
+# DOWNLOAD
+
+https://github.com/mcandre/rez/releases
+
 # LICENSE
 
 FreeBSD

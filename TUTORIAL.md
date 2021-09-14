@@ -183,6 +183,11 @@ Clean commands should be idempotent, succeeding regardless of whether the files 
 *WARNING: Always backup your project, and print out the paths to be removed, before actually implementing file removal.*
 
 ```c++
+static int clean_bin() {
+    // std::filesystem::remove_all("bin");
+    return 0;
+}
+
 static int clean_msvc() {
     // std::filesystem::remove_all("x64");
     // std::filesystem::remove_all("x86");
@@ -218,6 +223,7 @@ static int clean_cmake() {
 }
 
 static int clean() {
+    clean_bin();
     clean_msvc();
     clean_cmake();
     return EXIT_SUCCESS;

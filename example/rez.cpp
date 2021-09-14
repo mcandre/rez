@@ -54,6 +54,11 @@ static int run() {
     return system("athena");
 }
 
+static int clean_bin() {
+    std::filesystem::remove_all("bin");
+    return 0;
+}
+
 static int clean_msvc() {
     std::filesystem::remove_all("x64");
     std::filesystem::remove_all("x86");
@@ -79,15 +84,16 @@ static int clean_msvc() {
 
 static int clean_cmake() {
     std::filesystem::remove_all("install_manifest.txt");
-    std::filesystem::remove_all("bin");
     std::filesystem::remove_all("Makefile");
     std::filesystem::remove_all("CMakeFiles");
     std::filesystem::remove_all("CMakeCache.txt");
     std::filesystem::remove_all("cmake_install.cmake");
+    std::filesystem::remove_all("CTestTestfile.cmake");
     return EXIT_SUCCESS;
 }
 
 static int clean() {
+    clean_bin();
     clean_msvc();
     clean_cmake();
     return EXIT_SUCCESS;
@@ -103,6 +109,7 @@ int main(int argc, const char **argv) {
 
     const auto tasks = std::map<std::string_view, std::function<int()>>{
         { "clean"sv, clean },
+        { "clean_bin"sv, clean_bin },
         { "clean_cmake"sv, clean_cmake },
         { "clean_msvc"sv, clean_msvc },
         { "cmake_init"sv, cmake_init },

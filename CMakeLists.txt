@@ -1,6 +1,30 @@
 cmake_minimum_required(VERSION 3.4)
 set(CMAKE_MESSAGE_LOG_LEVEL "WARNING")
-set(EXECUTABLE_OUTPUT_PATH "bin")
+
+set(BANNER rez-0.0.1)
+
+if(DEFINED ENV{TARGET})
+    set(EXECUTABLE_OUTPUT_PATH "bin/${BANNER}/$ENV{TARGET}")
+
+    if("$ENV{TARGET}" MATCHES "darwin")
+        set(CMAKE_C_COMPILER "$ENV{TARGET}20.4-clang")
+        set(CMAKE_CXX_COMPILER "$ENV{TARGET}20.4-clang++")
+        set(CROSSBUILD "$ENV{TARGET}")
+        set(MACOSX_DEPLOYMENT_TARGET "10.15")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}")
+    elseif("$ENV{TARGET}" MATCHES "windows")
+        link_libraries(/usr/x86_64-w64-mingw32/lib /usr/i686-w64-mingw32/lib)
+    else()
+        set(CMAKE_C_COMPILER_TARGET "$ENV{TARGET}")
+        set(CMAKE_CXX_COMPILER_TARGET "$ENV{TARGET}")
+        include_directories("/usr/$ENV{TARGET}/include/c++/9/$ENV{TARGET}")
+		include_directories("/usr/$ENV{TARGET}/include")
+    endif()
+else()
+    set(EXECUTABLE_OUTPUT_PATH "bin")
+endif()
+
 project(rez)
 
 if(MSVC)
@@ -29,7 +53,7 @@ else()
         set(CMAKE_C_FLAGS "${CLANG_C_FLAGS}")
         set(CMAKE_CXX_FLAGS "${CLANG_CXX_FLAGS}")
 
-        if(NOT CMAKE_SYSTEM_NAME MATCHES "Darwin")
+        if(NOT DEFINED ENV{TARGET} AND NOT CMAKE_SYSTEM_NAME MATCHES "Darwin")
             set(CMAKE_C_CLANG_TIDY clang-tidy -header-filter=${CMAKE_SOURCE_DIR})
             set(CMAKE_CXX_CLANG_TIDY clang-tidy -header-filter=${CMAKE_SOURCE_DIR})
         endif()
@@ -41,7 +65,17 @@ endif()
 
 include_directories(include)
 
+if(DEFINED ENV{TARGET} AND "$ENV{TARGET}" MATCHES "windows")
+    set(ARTIFACT_EXT .exe)
+else()
+    set(ARTIFACT_EXT)
+endif()
+
 add_executable(rez src/cmd/rez/main.cpp src/rez.cpp)
+set_target_properties(
+    rez PROPERTIES
+    OUTPUT_NAME "rez${ARTIFACT_EXT}"
+)
 
 if(MSVC)
     set(HOME "$ENV{HOMEDRIVE}$ENV{HOMEPATH}")
