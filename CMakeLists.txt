@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
 set(CMAKE_MESSAGE_LOG_LEVEL "WARNING")
 
-set(BANNER rez-0.0.1)
+set(BANNER rez-0.0.2)
 
 if(DEFINED ENV{TARGET})
     if("$ENV{TARGET}" MATCHES "darwin")
