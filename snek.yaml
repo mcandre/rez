@@ -1,5 +1,5 @@
 ---
-build_command: "./clean-cmake.sh; cmake . && cmake --build . --config Release"
+build_command: "./clean-cmake.sh; cmake . && VERBOSE=1 cmake --build . --config Release"
 ships:
 - image: "mcandre/snek:darwin"
   targets:
@@ -7,6 +7,9 @@ ships:
   - "x86_64h-apple-darwin"
   - "arm64-apple-darwin"
   - "arm64e-apple-darwin"
+- image: "mcandre/snek:freebsd"
+  targets:
+  - "x86_64-unknown-freebsd"
 - image: "mcandre/snek:musl-alpine"
   targets:
   - "x86_64-alpine-linux-musl"
