@@ -23,15 +23,26 @@ if(DEFINED ENV{TARGET})
         else()
             if("$ENV{TARGET}" MATCHES "bsd")
                 set(CMAKE_SYSROOT "/usr/local/$ENV{TARGET}")
-                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+
+                if("$ENV{TARGET}" MATCHES "openbsd")
+                    set(CMAKE_CXX_FLAGS "${CLANG_CXX_FLAGS} -pthread")
+                else()
+                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+                endif()
             endif()
 
             set(CMAKE_C_COMPILER_TARGET "$ENV{TARGET}")
             set(CMAKE_CXX_COMPILER_TARGET "$ENV{TARGET}")
+
             include_directories("/usr/local/$ENV{TARGET}/include/c++/v1")
             include_directories("/usr/$ENV{TARGET}/include/c++/9/$ENV{TARGET}")
-            include_directories("/usr/local/$ENV{TARGET}/usr/include/g++")
             include_directories("/usr/$ENV{TARGET}/include")
+            include_directories("/usr/local/$ENV{TARGET}/usr/include")
+            include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/v1")
+
+            if(NOT "$ENV{TARGET}" MATCHES "openbsd")
+                include_directories("/usr/local/$ENV{TARGET}/usr/include/g++")
+            endif()
         endif()
     endif()
 
