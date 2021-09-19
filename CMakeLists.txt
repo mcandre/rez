@@ -8,14 +8,17 @@ set(ARTIFACT_EXT)
 set(TARGET_FLAG)
 
 set(PREFIXES_WITH_LIBRARIES " \
+    -B /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
     -B /usr/local/$ENV{TARGET}/usr/lib/gcc80/ \
     -B /usr/local/$ENV{TARGET}/lib \
     -B /usr/local/$ENV{TARGET}/usr/lib/profile \
     -B /usr/local/$ENV{TARGET}/usr/lib/ \
+    -L /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
     -L /usr/local/$ENV{TARGET}/usr/lib/gcc80/ \
     -L /usr/local/$ENV{TARGET}/lib \
     -L /usr/local/$ENV{TARGET}/usr/lib/profile \
     -L /usr/local/$ENV{TARGET}/usr/lib/ \
+    -rpath /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
     -rpath /usr/local/$ENV{TARGET}/usr/lib/gcc80/ \
     -rpath /usr/local/$ENV{TARGET}/lib \
     -rpath /usr/local/$ENV{TARGET}/usr/lib/profile \
@@ -26,8 +29,8 @@ set(PREFIXES_WITH_LIBRARIES " \
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
 
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 
 if(DEFINED ENV{TARGET})
     if(DEFINED ENV{TARGET} AND "$ENV{TARGET}" MATCHES "w64")
@@ -162,15 +165,12 @@ if(DEFINED ENV{TARGET})
     if("$ENV{TARGET}" MATCHES "w64")
         target_link_libraries(rez ucrt)
     elseif("$ENV{TARGET}" MATCHES "dragonflybsd")
-        # target_link_libraries(rez
-        #                         smb
-        #                         devstat
-        #                         kvm
-        #                         hammer
-        #                         c
-        #                         kiconv
-        #                         stdc++
-        # )
+        target_link_libraries(rez
+                                # stdc++
+                                # c++
+                                # compilerrt
+                                stdc++fs
+        )
     elseif("$ENV{TARGET}" MATCHES "netbsd")
         target_link_libraries(rez c++abi unwind)
     endif()
