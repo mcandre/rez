@@ -47,9 +47,9 @@ if(DEFINED ENV{TARGET})
 
             include_directories("/usr/local/$ENV{TARGET}/usr/libdata/gcc80")
 
-            # if(NOT "$ENV{TARGET}" MATCHES "openbsd")
-            #     include_directories("/usr/local/$ENV{TARGET}/usr/include/g++")
-            # endif()
+            if(NOT "$ENV{TARGET}" MATCHES "openbsd")
+                include_directories("/usr/local/$ENV{TARGET}/usr/include/g++")
+            endif()
 
             if("$ENV{TARGET}" MATCHES "bsd")
                 set(CMAKE_SYSROOT "/usr/local/$ENV{TARGET}")
