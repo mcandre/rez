@@ -140,12 +140,7 @@ if(DEFINED ENV{TARGET})
     if("$ENV{TARGET}" MATCHES "w64")
         target_link_libraries(rez ucrt)
     elseif("$ENV{TARGET}" MATCHES "dragonflybsd")
-        target_link_libraries(rez
-                                # stdc++
-                                # c++
-                                # compilerrt
-                                stdc++fs
-        )
+        target_link_libraries(rez stdc++fs)
     elseif("$ENV{TARGET}" MATCHES "netbsd")
         target_link_libraries(rez c++abi unwind)
     endif()
