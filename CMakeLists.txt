@@ -25,8 +25,6 @@ if(DEFINED ENV{TARGET})
 
             # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 
-            set(CMAKE_C_COMPILER_TARGET "$ENV{TARGET}")
-            set(CMAKE_CXX_COMPILER_TARGET "$ENV{TARGET}")
 
             # include_directories("/usr/local/$ENV{TARGET}/include/c++/v1")
             # include_directories("/usr/local/$ENV{TARGET}/include/c++/9/$ENV{TARGET}")
@@ -74,6 +72,9 @@ if(DEFINED ENV{TARGET})
                     endif()
                 endif()
             endif()
+
+            set(CMAKE_C_COMPILER_TARGET "$ENV{TARGET}")
+            set(CMAKE_CXX_COMPILER_TARGET "$ENV{TARGET}")
         endif()
     endif()
 
