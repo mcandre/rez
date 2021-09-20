@@ -37,11 +37,6 @@ if(DEFINED ENV{TARGET})
 
             # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 
-
-            set(CMAKE_C_COMPILER_TARGET "x86_64-unknown-dragonfly")
-            set(CMAKE_CXX_COMPILER_TARGET "x86_64-unknown-dragonfly")
-
-
             set(CMAKE_C_COMPILER_TARGET "$ENV{TARGET}")
             set(CMAKE_CXX_COMPILER_TARGET "$ENV{TARGET}")
 
