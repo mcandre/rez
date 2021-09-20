@@ -71,9 +71,6 @@ if(DEFINED ENV{TARGET})
 
                         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
                         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
-
-                        # set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS)
-                        # set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
                     endif()
                 endif()
             endif()
