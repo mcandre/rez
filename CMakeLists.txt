@@ -15,12 +15,7 @@ set(PREFIXES_WITH_LIBRARIES " \
     -L /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
     -L /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
     -L /usr/local/$ENV{TARGET}/lib \
-    -L /usr/local/$ENV{TARGET}/usr/lib \
-    -rpath /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
-    -rpath /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
-    -rpath /usr/local/$ENV{TARGET}/lib \
-    -rpath /usr/local/$ENV{TARGET}/usr/lib \
-    "
+    -L /usr/local/$ENV{TARGET}/usr/lib"
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
