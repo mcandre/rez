@@ -11,17 +11,14 @@ set(PREFIXES_WITH_LIBRARIES " \
     -B /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
     -B /usr/local/$ENV{TARGET}/usr/lib/gcc80/ \
     -B /usr/local/$ENV{TARGET}/lib \
-    -B /usr/local/$ENV{TARGET}/usr/lib/profile \
     -B /usr/local/$ENV{TARGET}/usr/lib/ \
     -L /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
     -L /usr/local/$ENV{TARGET}/usr/lib/gcc80/ \
     -L /usr/local/$ENV{TARGET}/lib \
-    -L /usr/local/$ENV{TARGET}/usr/lib/profile \
     -L /usr/local/$ENV{TARGET}/usr/lib/ \
     -rpath /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
     -rpath /usr/local/$ENV{TARGET}/usr/lib/gcc80/ \
     -rpath /usr/local/$ENV{TARGET}/lib \
-    -rpath /usr/local/$ENV{TARGET}/usr/lib/profile \
     -rpath /usr/local/$ENV{TARGET}/usr/lib/ \
     "
 )
