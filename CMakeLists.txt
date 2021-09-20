@@ -21,10 +21,6 @@ if(DEFINED ENV{TARGET})
             set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}")
         else()
-
-
-
-
             # include_directories("/usr/local/$ENV{TARGET}/include/c++/v1")
             # include_directories("/usr/local/$ENV{TARGET}/include/c++/9/$ENV{TARGET}")
             # include_directories("/usr/local/$ENV{TARGET}/include")
@@ -32,17 +28,11 @@ if(DEFINED ENV{TARGET})
             # include_directories("/usr/local/$ENV{TARGET}/usr/include/sys")
             # include_directories("/usr/local/$ENV{TARGET}/usr/local/include")
 
-
             # include_directories("/usr/local/$ENV{TARGET}/usr/local/include/c++/v1")
-
             # include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/8.0/parallel")
             # include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/8.0/tr1")
-            include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/8.0")
-
             # include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/4.7")
             # include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/4.7/tr1")
-
-            include_directories("/usr/local/$ENV{TARGET}/usr/libdata/gcc80")
 
             if(NOT "$ENV{TARGET}" MATCHES "openbsd")
                 include_directories("/usr/local/$ENV{TARGET}/usr/include/g++")
@@ -67,6 +57,9 @@ if(DEFINED ENV{TARGET})
 
                     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
                     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
+
+                    include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/8.0")
+                    include_directories("/usr/local/$ENV{TARGET}/usr/libdata/gcc80")
                 else()
                     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
                 endif()
