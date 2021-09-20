@@ -23,7 +23,6 @@ if(DEFINED ENV{TARGET})
         else()
 
 
-            # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 
 
             # include_directories("/usr/local/$ENV{TARGET}/include/c++/v1")
@@ -54,22 +53,22 @@ if(DEFINED ENV{TARGET})
 
                 if("$ENV{TARGET}" MATCHES "openbsd")
                     set(CMAKE_CXX_FLAGS "${CLANG_CXX_FLAGS} -pthread")
-                else()
-                    if("$ENV{TARGET}" MATCHES "dragonflybsd")
-                        set(PREFIXES_WITH_LIBRARIES " \
-                            -B /usr/local/$ENV{TARGET}/lib \
-                            -B /usr/local/$ENV{TARGET}/usr/lib \
-                            -B /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
-                            -B /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
-                            -L /usr/local/$ENV{TARGET}/lib \
-                            -L /usr/local/$ENV{TARGET}/usr/lib \
-                            -L /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
-                            -L /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
-                        ")
+                elseif("$ENV{TARGET}" MATCHES "dragonflybsd")
+                    set(PREFIXES_WITH_LIBRARIES " \
+                        -B /usr/local/$ENV{TARGET}/lib \
+                        -B /usr/local/$ENV{TARGET}/usr/lib \
+                        -B /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
+                        -B /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
+                        -L /usr/local/$ENV{TARGET}/lib \
+                        -L /usr/local/$ENV{TARGET}/usr/lib \
+                        -L /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
+                        -L /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
+                    ")
 
-                        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
-                        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
-                    endif()
+                    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
+                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
+                else()
+                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
                 endif()
             endif()
 
