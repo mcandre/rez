@@ -7,22 +7,6 @@ set(EXECUTABLE_OUTPUT_PATH "bin")
 set(ARTIFACT_EXT)
 set(TARGET_FLAG)
 
-set(PREFIXES_WITH_LIBRARIES " \
-    -B /usr/local/$ENV{TARGET}/lib \
-    -B /usr/local/$ENV{TARGET}/usr/lib \
-    -B /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
-    -B /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
-    -L /usr/local/$ENV{TARGET}/lib \
-    -L /usr/local/$ENV{TARGET}/usr/lib \
-    -L /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
-    -L /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
-")
-
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
-
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-
 if(DEFINED ENV{TARGET})
     if(DEFINED ENV{TARGET} AND "$ENV{TARGET}" MATCHES "w64")
         set(CMAKE_C_COMPILER "$ENV{TARGET}-gcc-9.3-posix")
@@ -37,6 +21,21 @@ if(DEFINED ENV{TARGET})
             set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}")
         else()
+            set(PREFIXES_WITH_LIBRARIES " \
+                -B /usr/local/$ENV{TARGET}/lib \
+                -B /usr/local/$ENV{TARGET}/usr/lib \
+                -B /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
+                -B /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
+                -L /usr/local/$ENV{TARGET}/lib \
+                -L /usr/local/$ENV{TARGET}/usr/lib \
+                -L /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
+                -L /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
+            ")
+
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
+
+            # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 
 
             set(CMAKE_C_COMPILER_TARGET "x86_64-unknown-dragonfly")
