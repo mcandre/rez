@@ -76,9 +76,8 @@ int main(int argc, const char **argv) {
 
     try {
         config.Load();
-    } catch (const std::string &err) {
-        std::cerr << err << std::endl;
-        return EXIT_FAILURE;
+    } catch (const std::exception &err) {
+        std::cerr << err.what() << std::endl;
     }
 
     if (config.debug) {
