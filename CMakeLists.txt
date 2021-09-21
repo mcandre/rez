@@ -26,6 +26,22 @@ if(DEFINED ENV{TARGET})
 
                 if("$ENV{TARGET}" MATCHES "openbsd")
                     set(CMAKE_CXX_FLAGS "${CLANG_CXX_FLAGS} -pthread")
+                elseif("$ENV{TARGET}" MATCHES "dragonflybsd")
+                    set(PREFIXES_WITH_LIBRARIES " \
+                        -B /usr/local/$ENV{TARGET}/lib \
+                        -B /usr/local/$ENV{TARGET}/usr/lib \
+                        -B /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
+                        -B /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
+                        -L /usr/local/$ENV{TARGET}/lib \
+                        -L /usr/local/$ENV{TARGET}/usr/lib \
+                        -L /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
+                        -L /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
+                    ")
+
+                    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
+                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
+
+                    include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/8.0")
                 else()
                     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
                 endif()
@@ -33,12 +49,11 @@ if(DEFINED ENV{TARGET})
 
             set(CMAKE_C_COMPILER_TARGET "$ENV{TARGET}")
             set(CMAKE_CXX_COMPILER_TARGET "$ENV{TARGET}")
-
             include_directories("/usr/local/$ENV{TARGET}/include/c++/v1")
             include_directories("/usr/$ENV{TARGET}/include/c++/9/$ENV{TARGET}")
+            include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/v1")
             include_directories("/usr/$ENV{TARGET}/include")
             include_directories("/usr/local/$ENV{TARGET}/usr/include")
-            include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/v1")
 
             if(NOT "$ENV{TARGET}" MATCHES "openbsd")
                 include_directories("/usr/local/$ENV{TARGET}/usr/include/g++")
@@ -68,8 +83,8 @@ else()
     set(UNIX_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Werror")
     set(UNIX_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Werror")
 
-    set(GNU_C_FLAGS "${UNIX_C_FLAGS} -std=gnu17 -Wextra -Wall -pedantic")
-    set(GNU_CXX_FLAGS "${UNIX_CXX_FLAGS} -std=c++17 -Wextra -Wall -pedantic -Weffc++")
+    set(GNU_C_FLAGS "${UNIX_C_FLAGS} -std=gnu17 -Wextra -Wall -pedantic -Wno-unused-command-line-argument")
+    set(GNU_CXX_FLAGS "${UNIX_CXX_FLAGS} -std=c++17 -Wextra -Wall -pedantic -Wno-unused-command-line-argument -Weffc++")
 
     set(LLVM_FLAGS "-Wmost")
     set(CLANG_C_FLAGS "${GNU_C_FLAGS} ${LLVM_FLAGS}")
@@ -105,10 +120,14 @@ else()
     set(ARTIFACT rez)
 endif()
 
-if(DEFINED ENV{TARGET} AND "$ENV{TARGET}" MATCHES "w64")
-    target_link_libraries(rez ucrt)
-elseif(DEFINED ENV{TARGET} AND "$ENV{TARGET}" MATCHES "netbsd")
-    target_link_libraries(rez c++abi unwind)
+if(DEFINED ENV{TARGET})
+    if("$ENV{TARGET}" MATCHES "w64")
+        target_link_libraries(rez ucrt)
+    elseif("$ENV{TARGET}" MATCHES "dragonflybsd")
+        target_link_libraries(rez stdc++fs)
+    elseif("$ENV{TARGET}" MATCHES "netbsd")
+        target_link_libraries(rez c++abi unwind)
+    endif()
 endif()
 
 file(TO_NATIVE_PATH "${HOME}/bin" INSTALL_DIR)
