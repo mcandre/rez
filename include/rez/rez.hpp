@@ -18,7 +18,7 @@ namespace rez {
 /**
  * @brief Version is semver.
  */
-constexpr auto Version = "0.0.5";
+constexpr auto Version = "0.0.6";
 
 /**
  * @brief TaskDefinitionCpp denotes the path to a C++ task definition source file.
