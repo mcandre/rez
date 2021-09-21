@@ -122,7 +122,7 @@ void Config::ApplyMSVCToolchain() const {
         FILE *process = popen(query_command.c_str(), "r");
 
         if (process == nullptr) {
-            throw "error launching msvc query command: "s + query_command;
+            throw std::runtime_error("error launching msvc query command: "s + query_command);
         }
 
         // https://devblogs.microsoft.com/oldnewthing/20100203-00/?p=15083#:~:text=The%20theoretical%20maximum%20length%20of,a%20limit%20of%2032767%20characters.
@@ -143,7 +143,7 @@ void Config::ApplyMSVCToolchain() const {
             err << "error running query command: "
                 << query_command
                 << " status: " << query_status;
-            throw err.str();
+            throw std::runtime_error(err.str());
         }
 
         cache.seekg(0);
@@ -170,7 +170,7 @@ void Config::ApplyMSVCToolchain() const {
                 << line
                 << " errno: "
                 << errno;
-            throw err.str();
+            throw std::runtime_error(err.str());
         }
     }
 
@@ -185,7 +185,7 @@ void Config::Load() {
             task_definition_path = TaskDefinitionC;
             task_definition_lang = Lang::C;
         } else {
-            throw "error locating a task definition file rez.{cpp,c}"s;
+            throw std::runtime_error("error locating a task definition file rez.{cpp,c}");
         }
     }
 
