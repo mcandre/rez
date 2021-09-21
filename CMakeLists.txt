@@ -42,7 +42,6 @@ if(DEFINED ENV{TARGET})
                     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
 
                     include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/8.0")
-                    include_directories("/usr/local/$ENV{TARGET}/usr/libdata/gcc80")
                 else()
                     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
                 endif()
