@@ -8,6 +8,8 @@ set(ARTIFACT_EXT)
 set(TARGET_FLAG)
 
 if(DEFINED ENV{TARGET})
+    set(STATIC_FLAG -static)
+
     if(DEFINED ENV{TARGET} AND "$ENV{TARGET}" MATCHES "w64")
         set(CMAKE_C_COMPILER "$ENV{TARGET}-gcc-9.3-posix")
         set(CMAKE_CXX_COMPILER "$ENV{TARGET}-g++-posix")
@@ -20,12 +22,14 @@ if(DEFINED ENV{TARGET})
             set(MACOSX_DEPLOYMENT_TARGET "10.15")
             set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}")
+            set(STATIC_FLAG)
         else()
             if("$ENV{TARGET}" MATCHES "bsd")
                 set(CMAKE_SYSROOT "/usr/local/$ENV{TARGET}")
 
                 if("$ENV{TARGET}" MATCHES "openbsd")
                     set(CMAKE_CXX_FLAGS "${CLANG_CXX_FLAGS} -pthread")
+                    set(STATIC_FLAG)
                 elseif("$ENV{TARGET}" MATCHES "dragonflybsd")
                     set(PREFIXES_WITH_LIBRARIES " \
                         -B /usr/local/$ENV{TARGET}/lib \
@@ -62,6 +66,8 @@ if(DEFINED ENV{TARGET})
     endif()
 
     set(EXECUTABLE_OUTPUT_PATH "bin/${BANNER}/$ENV{TARGET}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${STATIC_FLAG}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${STATIC_FLAG}")
 endif()
 
 project(rez)
@@ -126,7 +132,7 @@ if(DEFINED ENV{TARGET})
     elseif("$ENV{TARGET}" MATCHES "dragonflybsd")
         target_link_libraries(rez stdc++fs)
     elseif("$ENV{TARGET}" MATCHES "netbsd")
-        target_link_libraries(rez c++abi unwind)
+        target_link_libraries(rez c++ c++abi unwind)
     endif()
 endif()
 
