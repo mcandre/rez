@@ -31,19 +31,17 @@ if(DEFINED ENV{TARGET})
                     set(CMAKE_CXX_FLAGS "${CLANG_CXX_FLAGS} -pthread")
                     set(STATIC_FLAG)
                 elseif("$ENV{TARGET}" MATCHES "dragonflybsd")
-                    set(PREFIXES_WITH_LIBRARIES " \
-                        -B /usr/local/$ENV{TARGET}/lib \
-                        -B /usr/local/$ENV{TARGET}/usr/lib \
-                        -B /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
-                        -B /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
-                        -L /usr/local/$ENV{TARGET}/lib \
-                        -L /usr/local/$ENV{TARGET}/usr/lib \
-                        -L /usr/local/$ENV{TARGET}/usr/lib/gcc80 \
-                        -L /usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8 \
-                    ")
+                    set(DFLY_PATHS
+                        "/usr/local/$ENV{TARGET}/lib"
+                        "/usr/local/$ENV{TARGET}/usr/lib"
+                        "/usr/local/$ENV{TARGET}/usr/lib/gcc80"
+                        "/usr/local/$ENV{TARGET}/usr/local/cxxfs_gcc8"
+                    )
 
-                    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
-                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${PREFIXES_WITH_LIBRARIES}")
+                    foreach(DFLY_PATH IN LISTS DFLY_PATHS)
+                        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -B ${DFLY_PATH} -L ${DFLY_PATH}")
+                        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -B ${DFLY_PATH} -L ${DFLY_PATH}")
+                    endforeach()
 
                     include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/8.0")
                 else()
