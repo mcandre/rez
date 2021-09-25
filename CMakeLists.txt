@@ -39,8 +39,8 @@ if(DEFINED ENV{TARGET})
                     )
 
                     foreach(DFLY_PATH IN LISTS DFLY_PATHS)
-                        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -B ${DFLY_PATH} -L ${DFLY_PATH}")
-                        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -B ${DFLY_PATH} -L ${DFLY_PATH}")
+                        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -B${DFLY_PATH} -L${DFLY_PATH}")
+                        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -B${DFLY_PATH} -L${DFLY_PATH}")
                     endforeach()
 
                     include_directories("/usr/local/$ENV{TARGET}/usr/include/c++/8.0")
