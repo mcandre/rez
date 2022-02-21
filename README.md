@@ -1,4 +1,4 @@
-# rez: a C/C++ task runner
+# rez: C/C++ task runner
 
 ```text
  `_~----====-.
