@@ -15,7 +15,7 @@
  *
  * @param program the invoked name of this program
  */
-static void Usage(const std::string &program) {
+static void Usage(const std::string_view &program) {
     std::cerr << "usage: " << program << " [OPTION] [<task> [<task> [<task>...]]]" << std::endl
               << std::endl;
 
@@ -41,9 +41,14 @@ static void Banner() {
  * @returns CLI exit code
  */
 int main(int argc, const char **argv) {
-    rez::Config config;
+    const std::vector<std::string_view> args{ argv, argv + argc };
 
-    const auto args = std::vector<std::string_view>{ argv, argv + argc };
+    if (args.empty()) {
+        std::cerr << "error: missing program name" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    rez::Config config;
 
     size_t i(1);
     for (; i < args.size(); i++) {
@@ -65,14 +70,14 @@ int main(int argc, const char **argv) {
         }
 
         if (arg == "-h") {
-            Usage(argv[0]);
+            Usage(args[0]);
             return EXIT_SUCCESS;
         }
 
         break;
     }
 
-    const auto rest = std::vector<std::string_view>{ args.begin() + i, args.end() };
+    const std::vector<std::string_view> rest{ args.begin() + i, args.end() };
 
     try {
         config.Load();
