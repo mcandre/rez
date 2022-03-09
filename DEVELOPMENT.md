@@ -12,7 +12,7 @@
 * [cpplint](https://pypi.org/project/cpplint/)
 * [Doxygen](https://www.doxygen.nl/index.html)
 * [sail](https://github.com/mcandre/sail)
-* [snek](https://github.com/mcandre/snek) 0.0.1
+* [snek](https://github.com/mcandre/snek) v0.0.2 with an x86_64 host
 * [vera++](https://bitbucket.org/verateam/vera/wiki/Home)
 
 # BUILD
