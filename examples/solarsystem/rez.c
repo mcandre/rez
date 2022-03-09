@@ -317,7 +317,11 @@ int main(int argc, const char **argv) {
     int (*default_task)() = run;
 
     if (argc == 1) {
-        return default_task();
+        if (default_task()) {
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
     }
 
     if (strcmp(argv[1], "-l") == 0) {
@@ -335,10 +339,9 @@ int main(int argc, const char **argv) {
         for (size_t j = 0; j < task_sz; j++) {
             if (strcmp(arg, task_names[j]) == 0) {
                 found_task = true;
-                const int status = task_functions[j]();
 
-                if (status != EXIT_SUCCESS) {
-                    return status;
+                if (task_functions[j]()) {
+                    return EXIT_FAILURE;
                 }
             }
         }

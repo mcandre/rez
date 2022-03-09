@@ -17,7 +17,7 @@ static int cmake_init() {
 static int build() {
     const auto status = cmake_init();
 
-    if (status != EXIT_SUCCESS) {
+    if (status) {
         return status;
     }
 
@@ -27,7 +27,7 @@ static int build() {
 static int install() {
     const auto status = build();
 
-    if (status != EXIT_SUCCESS) {
+    if (status) {
         return status;
     }
 
@@ -37,7 +37,7 @@ static int install() {
 static int uninstall() {
     const auto status = cmake_init();
 
-    if (status != EXIT_SUCCESS) {
+    if (status) {
         return status;
     }
 
@@ -47,7 +47,7 @@ static int uninstall() {
 static int run() {
     const auto status = install();
 
-    if (status != EXIT_SUCCESS) {
+    if (status) {
         return status;
     }
 
@@ -104,7 +104,11 @@ int main(int argc, const char **argv) {
     const auto default_task = std::function<int()>(run);
 
     if (args.empty()) {
-        return default_task();
+        if (default_task()) {
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
     }
 
     const auto tasks = std::map<std::string_view, std::function<int()>>{
@@ -130,10 +134,9 @@ int main(int argc, const char **argv) {
     for (const auto &arg : args) {
         try {
             const auto f = tasks.at(arg);
-            const auto status = f();
 
-            if (status != EXIT_SUCCESS) {
-                return status;
+            if (f()) {
+                return EXIT_FAILURE;
             }
         } catch (std::out_of_range &e) {
             std::cerr << "no such task: " << arg << std::endl;

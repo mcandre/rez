@@ -123,5 +123,11 @@ int main(int argc, const char **argv) {
         std::cerr << "running command: " << run_command << std::endl;
     }
 
-    return system(run_command.c_str());
+    const auto status = system(run_command.c_str());
+
+    if (status) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }

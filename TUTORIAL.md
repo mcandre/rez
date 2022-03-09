@@ -99,6 +99,8 @@ int main(int argc, const char **argv) {
 
 By convention, a task definition should feature a default task, which executes when no arguments are supplied. Similar to configuration for the `npm` task runer.
 
+Tasks can be designed standalone, or explicitly dependent on calling other tasks first. Either way, each task should return a meaningful POSIX-style exit code: Zero indicates success, non-zero indicates failure. In particular, ensure any non-zero error codes are transformed into a suitable 8-bit value Some error codes may happen to reset to zero under modulo 256 arithmetic, which risks silently suppressing errors.
+
 For example, this can be a task to `build` or `test` your application. Whichever custom task you find to be most relevant for your project.
 
 ```c++
