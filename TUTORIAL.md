@@ -44,7 +44,9 @@ In this way, rez is designed as a free-form task runner. We offer an optional AP
 
 You can write your own specialized task tree processing algorithm, or simply chain tasks together with ordinary function calls.
 
-(Includes elided for brevity. For more detail, the example app contains fully qualified include directives.)
+We provide two example applications to demonstrate how to write custom tasks for your projects. The text below describes the process in terms of higher level C++ language projects. For the equivalent C code, dive into the [examples/solarsystem](examples/solarsystem) C project and its `rez.c` task definition source code file.
+
+The snippets below will elide includes for brevity. For more detail, dive into the [examples/athena](examples/athena) C++ project and its `rez.cpp` task definition source code file.
 
 ```c++
 static int build() {
@@ -184,13 +186,13 @@ Clean commands should be idempotent, succeeding regardless of whether the files 
 
 ```c++
 static int clean_bin() {
-    // std::filesystem::remove_all("bin");
+    std::filesystem::remove_all("bin");
     return 0;
 }
 
 static int clean_msvc() {
-    // std::filesystem::remove_all("x64");
-    // std::filesystem::remove_all("x86");
+    std::filesystem::remove_all("x64");
+    std::filesystem::remove_all("x86");
 
     const auto junk_extensions = std::unordered_set<std::string>{
         ".dir",
@@ -205,7 +207,7 @@ static int clean_msvc() {
 
         if (junk_extensions.find(child_path.extension().string()) != junk_extensions.end()) {
             std::cout << "Testing path match. This path would be removed: " << child_path << std::endl;
-            // std::filesystem::remove_all(child_path);
+            std::filesystem::remove_all(child_path);
         }
     }
 
@@ -213,12 +215,12 @@ static int clean_msvc() {
 }
 
 static int clean_cmake() {
-    // std::filesystem::remove_all("install_manifest.txt");
-    // std::filesystem::remove_all("bin");
-    // std::filesystem::remove_all("Makefile");
-    // std::filesystem::remove_all("CMakeFiles");
-    // std::filesystem::remove_all("CMakeCache.txt");
-    // std::filesystem::remove_all("cmake_install.cmake");
+    std::filesystem::remove_all("install_manifest.txt");
+    std::filesystem::remove_all("bin");
+    std::filesystem::remove_all("Makefile");
+    std::filesystem::remove_all("CMakeFiles");
+    std::filesystem::remove_all("CMakeCache.txt");
+    std::filesystem::remove_all("cmake_install.cmake");
     return EXIT_SUCCESS;
 }
 

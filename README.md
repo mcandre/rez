@@ -18,7 +18,7 @@ Maximize expressiveness, minimize bloat.
 # DEMO
 
 ```console
-$ cd example
+$ cd examples/athena
 $ rez
 
    ...    *    .   _  .
