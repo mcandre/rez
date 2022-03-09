@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 #include <errno.h>
+#include <ftw.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
