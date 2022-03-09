@@ -241,14 +241,18 @@ static int clean_msvc() {
     }
     struct dirent *de;
 
-    do {
+    while(true) {
         errno = 0;
-        de = readdir(d, NULL, NULL);
+        de = readdir(d);
 
         if (errno) {
             fprintf(stderr, "error: unable to traverse directory: %s\n", cwd);
             free(cwd);
             return EXIT_FAILURE;
+        }
+
+        if (!de) {
+            break;
         }
 
         const char *child = de->d_name;
@@ -258,9 +262,8 @@ static int clean_msvc() {
             free(cwd);
             return status;
         }
-    } while (de);
+    }
 #endif
-
     free(cwd);
     return EXIT_SUCCESS;
 }
