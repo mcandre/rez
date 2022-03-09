@@ -6,19 +6,27 @@
 #define PATH_MAX MAX_PATH
 #endif
 
+#if defined(_MSC_VER)
+#include <fileapi.h>
+#include <shellapi.h>
+#pragma comment(lib, "shell32")
+#else
 #define _XOPEN_SOURCE 500
 #define __USE_XOPEN_EXTENDED 1
+#include <dirent.h>
 #include <ftw.h>
-#include <stdio.h>
 #include <unistd.h>
+#endif
 
 #include <errno.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#if !defined(_MSC_VER)
 static int remove_cb(const char *path, const struct stat *sb, int typeflag, struct FTW *ftwbuf) {
     errno = 0;
     int status = remove(path);
@@ -29,12 +37,44 @@ static int remove_cb(const char *path, const struct stat *sb, int typeflag, stru
 
     return status;
 }
+#endif
 
 static int remove_all(const char *path) {
+    int status;
+
+#if defined(_MSC_VER)
+    const DWORD buf = GetFileAttributesA(path);
+
+    if (buf == INVALID_FILE_ATTRIBUTES) {
+        return EXIT_SUCCESS;
+    }
+
+    char *paths = calloc(strlen(path) + 5, sizeof(char));
+    strcpy(paths, path);
+
+    SHFILEOPSTRUCT shfo = {
+        NULL,
+        FO_DELETE,
+        paths,
+        NULL,
+        FOF_SILENT | FOF_NOERRORUI | FOF_NOCONFIRMATION,
+        FALSE,
+        NULL,
+        NULL
+    };
+    status = SHFileOperationA(&shfo);
+    free(paths);
+
+    if (status) {
+        fprintf(stderr, "error: unable to remove path: %s\n", path);
+    }
+
+    return status;
+#else
     struct stat buf;
 
     errno = 0;
-    int status = stat(path, &buf);
+    status = stat(path, &buf);
 
     if (status == 0) {
         if (S_ISREG(buf.st_mode)) {
@@ -58,6 +98,7 @@ static int remove_all(const char *path) {
 
     fprintf(stderr, "error: unable to query for path: %s\n", path);
     return EXIT_FAILURE;
+#endif
 }
 
 static void remove_all_abortable(const char *path) {
@@ -114,7 +155,7 @@ static int clean_bin() {
     return remove_all("bin");
 }
 
-static int clean_junk_extensions_cb(const char *path, const struct stat *sb, int typeflag, struct FTW *ftwbuf) {
+static int clean_junk_extensions(const char *path) {
     const char *junk_extensions[] = {
         ".dir",
         ".filters",
@@ -123,7 +164,7 @@ static int clean_junk_extensions_cb(const char *path, const struct stat *sb, int
         ".vcxproj"
     };
     const size_t junk_extensions_sz = sizeof(junk_extensions)/sizeof(char*);
-    const char *extension = strchr(path, '.');
+    const char *extension = strrchr(path, '.');
 
     if (extension) {
         for (size_t i = 0; i < junk_extensions_sz; i++) {
@@ -144,6 +185,15 @@ static int clean_msvc() {
     remove_all_abortable("x64");
     remove_all_abortable("x86");
 
+    const char *junk_extensions[] = {
+        ".dir",
+        ".filters",
+        ".obj",
+        ".sln",
+        ".vcxproj"
+    };
+    const size_t junk_extensions_sz = sizeof(junk_extensions)/sizeof(char*);
+
     errno = 0;
     char *cwd = malloc(sizeof(char) * PATH_MAX);
     if (!getcwd(cwd, PATH_MAX)) {
@@ -152,10 +202,67 @@ static int clean_msvc() {
         return EXIT_FAILURE;
     }
 
+    int status;
+
+#if defined(_MSC_VER)
+    char *glob = calloc(strlen(cwd) + 4, sizeof(char));
+    strcat(glob, cwd);
+    strcat(glob, "\\*");
+
+    WIN32_FIND_DATAA find_data;
+    HANDLE find_handle = FindFirstFileA(glob, &find_data);
+
+    if (find_handle == INVALID_HANDLE_VALUE) {
+        fprintf(stderr, "error: unable to traverse directory: %s\n", cwd);
+        free(glob);
+        free(cwd);
+        return EXIT_FAILURE;
+    }
+
+    while (FindNextFileA(find_handle, &find_data) != 0) {
+        status = clean_junk_extensions(find_data.cFileName);
+
+        if (status) {
+            free(glob);
+            free(cwd);
+            return status;
+        }
+    }
+
+    free(glob);
+#else
     errno = 0;
-    const int status = nftw(cwd, clean_junk_extensions_cb, 64, FTW_DEPTH | FTW_PHYS);
+    DIR *d = opendir(cwd);
+
+    if (!d) {
+        fprintf(stderr, "error: unable to open directory: %s\n", cwd);
+        free(cwd);
+        return EXIT_FAILURE;
+    }
+    struct dirent *de;
+
+    do {
+        errno = 0;
+        de = readdir(d, NULL, NULL);
+
+        if (errno) {
+            fprintf(stderr, "error: unable to traverse directory: %s\n", cwd);
+            free(cwd);
+            return EXIT_FAILURE;
+        }
+
+        const char *child = de->d_name;
+        status = clean_junk_extensions(child);
+
+        if (status) {
+            free(cwd);
+            return status;
+        }
+    } while (de);
+#endif
+
     free(cwd);
-    return status;
+    return EXIT_SUCCESS;
 }
 
 static int clean_cmake() {
