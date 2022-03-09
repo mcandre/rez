@@ -7,12 +7,12 @@
 #endif
 
 #define _XOPEN_SOURCE 500
+#define __USE_XOPEN_EXTENDED 1
 #include <ftw.h>
 #include <stdio.h>
 #include <unistd.h>
 
 #include <errno.h>
-#include <ftw.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
