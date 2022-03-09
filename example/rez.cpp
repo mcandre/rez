@@ -56,7 +56,7 @@ static int run() {
 
 static int clean_bin() {
     std::filesystem::remove_all("bin");
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 static int clean_msvc() {
