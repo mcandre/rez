@@ -276,6 +276,7 @@ static int clean_cmake() {
     remove_all_abortable("CMakeCache.txt");
     remove_all_abortable("cmake_install.cmake");
     remove_all_abortable("CTestTestfile.cmake");
+    remove_all_abortable("Testing");
     return EXIT_SUCCESS;
 }
 
