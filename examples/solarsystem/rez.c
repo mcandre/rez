@@ -49,7 +49,8 @@ static int remove_all(const char *path) {
         return EXIT_SUCCESS;
     }
 
-    char *paths = calloc(strlen(path) + 5, sizeof(char));
+    // Double null terminated per SHFileOperation requirements.
+    char *paths = calloc(strlen(path) + 2, sizeof(char));
     strcpy(paths, path);
 
     SHFILEOPSTRUCT shfo = {
