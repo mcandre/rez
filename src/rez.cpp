@@ -223,8 +223,7 @@ void Config::Load() {
 
     artifact_file_path = ApplyBinaryExtension(
         artifact_dir_path / ArtifactFileBasenameUnix,
-        windows
-    );
+        windows);
 
     std::stringstream ss;
     ss << compiler;
@@ -242,7 +241,7 @@ void Config::Load() {
     }
 
     std::string flags_cxx,
-                flags_c;
+        flags_c;
 
     if (task_definition_lang == Lang::Cpp) {
         const auto flags_cxx_opt = rez::GetEnvironmentVariable("CXXFLAGS");
