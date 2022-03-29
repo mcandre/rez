@@ -50,9 +50,9 @@ int main(int argc, const char **argv) {
 
     rez::Config config;
 
-    size_t i(1);
+    size_t i{ 1 };
     for (; i < args.size(); i++) {
-        const auto arg = args[i];
+        const std::string_view arg{ args[i] };
 
         if (arg == "-c") {
             std::filesystem::remove_all(rez::CacheDir);
@@ -94,14 +94,13 @@ int main(int argc, const char **argv) {
 
     if (artifact_cache_miss) {
         std::filesystem::create_directories(config.artifact_dir_path);
-
-        const auto build_command = config.build_command;
+        const std::string build_command{ config.build_command };
 
         if (config.debug) {
             std::cerr << "running build command: " << build_command << std::endl;
         }
 
-        const auto build_status = system(build_command.c_str());
+        const int build_status{ system(build_command.c_str()) };
 
         if (build_status != EXIT_SUCCESS) {
             std::cerr << "error building task file: " << config.task_definition_path.string() << std::endl;
@@ -112,22 +111,16 @@ int main(int argc, const char **argv) {
     std::stringstream ss;
     ss << config.artifact_file_path.string();
 
-    for (const auto &arg : rest) {
+    for (const std::string_view &arg : rest) {
         ss << " ";
         ss << arg;
     }
 
-    const auto run_command = ss.str();
+    const std::string run_command{ ss.str() };
 
     if (config.debug) {
         std::cerr << "running command: " << run_command << std::endl;
     }
 
-    const auto status = system(run_command.c_str());
-
-    if (status) {
-        return EXIT_FAILURE;
-    }
-
-    return EXIT_SUCCESS;
+    return system(run_command.c_str());
 }

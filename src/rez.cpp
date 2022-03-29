@@ -42,10 +42,10 @@ std::filesystem::path ApplyBinaryExtension(const std::filesystem::path &basename
 }
 
 std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
-    char *transient = nullptr;
+    char *transient{ nullptr };
 
 #if defined(_WIN32)
-    auto len = size_t(0);
+    size_t len{ 0 };
     errno = 0;
     _dupenv_s(&transient, &len, key.c_str());
 
@@ -56,7 +56,7 @@ std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     }
 
     if (transient != nullptr) {
-        const std::string s(transient);
+        const std::string s{ transient };
         free(transient);
         return std::optional(s);
     }
@@ -66,7 +66,7 @@ std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     transient = getenv(key.c_str());
 
     if (transient != nullptr) {
-        const std::string s(transient);
+        const std::string s{ transient };
         return std::optional(s);
     }
 #endif
@@ -81,11 +81,11 @@ bool DetectWindowsEnvironment() {
 void Config::ApplyMSVCToolchain() const {
     std::filesystem::create_directories(CacheDir);
 
-    auto cache = std::fstream();
+    std::fstream cache{};
     cache.open(cache_file_path);
 
     std::error_code ec;
-    const std::uintmax_t cache_size = std::filesystem::file_size(cache_file_path, ec);
+    const std::uintmax_t cache_size{ std::filesystem::file_size(cache_file_path, ec) };
 
     if (cache_size == static_cast<std::uintmax_t>(-1) || cache_size == 0) {
         if (debug) {
@@ -93,14 +93,14 @@ void Config::ApplyMSVCToolchain() const {
         }
 
         std::string query_path(DefaultMSVCToolchainQueryScript);
-        const auto query_path_override = GetEnvironmentVariable("REZ_TOOLCHAIN_QUERY_PATH");
+        const std::optional<std::string> query_path_override{ GetEnvironmentVariable("REZ_TOOLCHAIN_QUERY_PATH") };
 
         if (query_path_override.has_value()) {
             query_path = *query_path_override;
         }
 
         std::string arch(ArchitectureMsvcAmd64);
-        const auto arch_override = GetEnvironmentVariable("REZ_ARCH");
+        const std::optional<std::string> arch_override{ GetEnvironmentVariable("REZ_ARCH") };
 
         if (arch_override.has_value()) {
             arch = *arch_override;
@@ -112,21 +112,21 @@ void Config::ApplyMSVCToolchain() const {
         ss << R"(" )";
         ss << arch;
         ss << R"( && set")";
-        const auto query_command = ss.str();
+        const std::string query_command{ ss.str() };
 
         if (debug) {
             std::cerr << "running msvc query command: " << query_command << std::endl;
         }
 
         errno = 0;
-        FILE *process = popen(query_command.c_str(), "r");
+        FILE *process{ popen(query_command.c_str(), "r") };
 
         if (process == nullptr) {
-            throw std::runtime_error("error launching msvc query command: "s + query_command);
+            throw std::runtime_error{ "error launching msvc query command: "s + query_command };
         }
 
         // https://devblogs.microsoft.com/oldnewthing/20100203-00/?p=15083#:~:text=The%20theoretical%20maximum%20length%20of,a%20limit%20of%2032767%20characters.
-        char line[32760] = { 0 };
+        char line[32760]{ 0 };
 
         while (fgets(line, sizeof(line), process) != nullptr) {
             if (strchr(line, '=') != nullptr) {
@@ -134,7 +134,7 @@ void Config::ApplyMSVCToolchain() const {
             }
         }
 
-        const auto query_status = pclose(process);
+        const int query_status{ pclose(process) };
 
         if (query_status != EXIT_SUCCESS) {
             cache.close();
@@ -143,7 +143,7 @@ void Config::ApplyMSVCToolchain() const {
             err << "error running query command: "
                 << query_command
                 << " status: " << query_status;
-            throw std::runtime_error(err.str());
+            throw std::runtime_error{ err.str() };
         }
 
         cache.seekg(0);
@@ -156,9 +156,9 @@ void Config::ApplyMSVCToolchain() const {
         errno = 0;
         if (_putenv(line.c_str()) != 0) {
 #else
-        size_t j = line.find('=');
-        const auto key = line.substr(0, j - 1);
-        const auto value = line.substr(j + 1, line.size());
+        const size_t j{ line.find('=') };
+        const std::string key{ line.substr(0, j - 1) };
+        const std::string value{ line.substr(j + 1, line.size()) };
 
         errno = 0;
         if (setenv(key.c_str(), value.c_str(), 1) != 0) {
@@ -170,7 +170,7 @@ void Config::ApplyMSVCToolchain() const {
                 << line
                 << " errno: "
                 << errno;
-            throw std::runtime_error(err.str());
+            throw std::runtime_error{ err.str() };
         }
     }
 
@@ -196,20 +196,20 @@ void Config::Load() {
     }
 
     if (task_definition_lang == Lang::Cpp) {
-        const auto compiler_override = GetEnvironmentVariable("CXX"s);
+        const std::optional<std::string> compiler_override{ GetEnvironmentVariable("CXX"s) };
 
         if (compiler_override.has_value()) {
-            const auto compiler_override_s = *compiler_override;
+            const std::string compiler_override_s{ *compiler_override };
 
             if (!compiler_override_s.empty()) {
                 compiler = compiler_override_s;
             }
         }
     } else {
-        const auto compiler_override = GetEnvironmentVariable("CC"s);
+        const std::optional<std::string> compiler_override{ GetEnvironmentVariable("CC"s) };
 
         if (compiler_override.has_value()) {
-            const auto compiler_override_s = *compiler_override;
+            const std::string compiler_override_s{ *compiler_override };
 
             if (!compiler_override_s.empty()) {
                 compiler = compiler_override_s;
@@ -229,11 +229,11 @@ void Config::Load() {
     ss << compiler;
     ss << " ";
 
-    const auto flags_cpp_opt = rez::GetEnvironmentVariable("CPPFLAGS");
+    const std::optional<std::string> flags_cpp_opt{ rez::GetEnvironmentVariable("CPPFLAGS") };
     std::string flags_cpp;
 
     if (flags_cpp_opt.has_value()) {
-        const auto flags = *flags_cpp_opt;
+        const std::string flags{ *flags_cpp_opt };
 
         if (!flags.empty()) {
             flags_cpp = flags;
@@ -244,20 +244,20 @@ void Config::Load() {
         flags_c;
 
     if (task_definition_lang == Lang::Cpp) {
-        const auto flags_cxx_opt = rez::GetEnvironmentVariable("CXXFLAGS");
+        const std::optional<std::string> flags_cxx_opt{ rez::GetEnvironmentVariable("CXXFLAGS") };
 
         if (flags_cxx_opt.has_value()) {
-            const auto flags = *flags_cxx_opt;
+            const std::string flags{ *flags_cxx_opt };
 
             if (!flags.empty()) {
                 flags_cxx = flags;
             }
         }
     } else {
-        const auto flags_c_opt = rez::GetEnvironmentVariable("CFLAGS");
+        const std::optional<std::string> flags_c_opt{ rez::GetEnvironmentVariable("CFLAGS") };
 
         if (flags_c_opt.has_value()) {
-            const auto flags = *flags_c_opt;
+            const std::string flags{ *flags_c_opt };
 
             if (!flags.empty()) {
                 flags_c = flags;
@@ -265,7 +265,7 @@ void Config::Load() {
         }
     }
 
-    const auto artifact_file_path_s = artifact_file_path.string();
+    const std::string artifact_file_path_s{ artifact_file_path.string() };
 
     if (compiler == DefaultCompilerWindows) {
         if (!flags_cpp.empty()) {

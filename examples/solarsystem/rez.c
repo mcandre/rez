@@ -29,7 +29,7 @@
 #if !defined(_MSC_VER)
 static int remove_cb(const char *path, __attribute__ ((unused)) const struct stat *sb, __attribute__ ((unused)) int typeflag, __attribute__ ((unused)) struct FTW *ftwbuf) {
     errno = 0;
-    int status = remove(path);
+    const int status = remove(path);
 
     if (status) {
         fprintf(stderr, "error: unable to remove path: %s\n", path);

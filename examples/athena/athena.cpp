@@ -9,7 +9,8 @@
 #include <random>
 
 int main() {
-    const auto replicant = R"(
+    const std::string replicant{
+        R"(
    ...    *    .   _  .
 *  .  *     .   * (_)   *
   .      |*  ..   *   ..
@@ -23,9 +24,10 @@ _-----`  |(,__,__/__/_ .
         |||
         |||
   , -=-~' .-^- _
-    )";
+        )"
+    };
 
-    const auto quotes = std::vector<std::string>{
+    const std::vector<std::string> quotes{
         "Can the maker repair what he makes?",
         "Chew, if only you could see what I've seen with your eyes.",
         "Do you like our owl?",

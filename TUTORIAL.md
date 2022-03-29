@@ -55,7 +55,7 @@ static int build() {
 
 static int run() {
     // This run task depends on the build task.
-    const auto status = build();
+    const int status{ build() };
 
     if (status != EXIT_SUCCESS) {
         return status;
@@ -70,16 +70,15 @@ After rez builds your task definition, rez executes it. Now, your task definitio
 
 ```c++
 int main(int argc, const char **argv) {
-    const auto tasks = std::map<std::string_view, std::function<int()>>{
+    const std::map<std::string_view, std::function<int()>> tasks{
         { "build"sv, build },
         { "run"sv, run }
     };
 
-    for (const auto &arg : args) {
+    for (const std::string_view &arg : args) {
         try {
-            const auto f = tasks.at(arg);
-
-            const auto status = f();
+            const std::function<int()> f{ tasks.at(arg) };
+            const int status{ f() };
 
             if (status != EXIT_SUCCESS) {
                 return status;
@@ -105,9 +104,8 @@ For example, this can be a task to `build` or `test` your application. Whichever
 
 ```c++
 int main(int argc, const char **argv) {
-    const auto args = std::vector<std::string_view>{ argv + 1, argv + argc };
-
-    const auto default_task = std::function<int()>(run);
+    const std::vector<std::string_view> args{ argv + 1, argv + argc };
+    const std::function<int()> default_task{ run };
 
     if (args.empty()) {
         return default_task();
@@ -123,9 +121,8 @@ rez expects your task definition to respond to `-l` by listing out the names of 
 
 ```c++
 int main(int argc, const char **argv) {
-    const auto args = std::vector<std::string_view>{ argv + 1, argv + argc };
-
-    const auto tasks = std::map<std::string_view, std::function<int()>>{
+    const std::vector<std::string_view> args{ argv + 1, argv + argc };
+    const std::map<std::string_view, std::function<int()>> tasks{
         { "build"sv, build },
         { "run"sv, run }
     };
@@ -158,7 +155,7 @@ static int cmake_init() {
 }
 
 static int install() {
-    const auto status = build();
+    const int status{ build() };
 
     if (status != EXIT_SUCCESS) {
         return status;
@@ -168,7 +165,7 @@ static int install() {
 }
 
 static int uninstall() {
-    const auto status = cmake_init();
+    const int status{ cmake_init() };
 
     if (status != EXIT_SUCCESS) {
         return status;
@@ -189,14 +186,14 @@ Clean commands should be idempotent, succeeding regardless of whether the files 
 ```c++
 static int clean_bin() {
     std::filesystem::remove_all("bin");
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 static int clean_msvc() {
     std::filesystem::remove_all("x64");
     std::filesystem::remove_all("x86");
 
-    const auto junk_extensions = std::unordered_set<std::string>{
+    const std::unordered_set<std::string> junk_extensions{
         ".dir",
         ".filters",
         ".obj",
@@ -204,8 +201,8 @@ static int clean_msvc() {
         ".vcxproj"
     };
 
-    for (const auto &child : std::filesystem::directory_iterator(std::filesystem::current_path())) {
-        const auto child_path = child.path();
+    for (const std::filesystem::directory_entry &child : std::filesystem::directory_iterator(std::filesystem::current_path())) {
+        const std::filesystem::path child_path{ child.path() };
 
         if (junk_extensions.find(child_path.extension().string()) != junk_extensions.end()) {
             std::cout << "Testing path match. This path would be removed: " << child_path << std::endl;
