@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
 set(CMAKE_MESSAGE_LOG_LEVEL "WARNING")
 
-set(BANNER rez-0.0.10)
+set(BANNER rez-0.0.11)
 
 set(EXECUTABLE_OUTPUT_PATH "bin")
 set(ARTIFACT_EXT)
