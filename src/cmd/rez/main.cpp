@@ -122,5 +122,9 @@ int main(int argc, const char **argv) {
         std::cerr << "running command: " << run_command << std::endl;
     }
 
-    return system(run_command.c_str());
+    if (system(run_command.c_str())) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
