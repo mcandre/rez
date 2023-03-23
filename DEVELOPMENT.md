@@ -9,8 +9,8 @@
 * [Docker](https://www.docker.com/) 20.10.12+
 * [snek](https://github.com/mcandre/snek) 0.0.2 with an x86_64 host
 * [Python](https://www.python.org/) 3.11.2+ with `pip[3] install --upgrade pip setuptools` and `pip[3] install -r requirements-dev.txt`
-* an [sh](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sh.html) implementation
-* [GNU findutils](https://www.gnu.org/software/findutils/)
+* a POSIX compatible [sh](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sh.html) implementation
+* GNU compatible [findutils](https://www.gnu.org/software/findutils/)
 * [sail](https://github.com/mcandre/sail) 0.0.1
 
 ## Recommended

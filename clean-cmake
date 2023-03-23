@@ -15,17 +15,17 @@ rm -f CMakeCache.txt || :
 rm -f cmake_install.cmake || :
 rm -f CTestTestfile.cmake || :
 
-/usr/bin/find . \
+find . \
     -name '*.vcxproj*' \
     -print \
     -exec rm -f '{}' \; || :
 
-/usr/bin/find . \
+find . \
     -name '*.sln' \
     -print \
     -exec rm -f '{}' \; || :
 
-/usr/bin/find . \
+find . \
     -name '*.dir' \
     -print \
     -exec rm -rf '{}' \; || :
