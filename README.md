@@ -82,9 +82,9 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 * [dale](https://github.com/mcandre/dale), a D task runner
 * [ejm98](http://www.ascii-art.de/ascii/mno/owl.txt) for Athena's prior artwork
 * [Gradle](https://gradle.org/) / [Maven](https://maven.apache.org/) / [Ant](https://ant.apache.org/), preiminent JVM build tools
-* [GNU make](https://www.gnu.org/software/make/) / [BSD make](https://www.freebsd.org/cgi/man.cgi?make(1)), classic task runners
 * [lake](https://luarocks.org/modules/steved/lake), a Lua task runner
 * [mage](https://magefile.org/), a preiminent Go task runner
+* [make](https://pubs.opengroup.org/onlinepubs/009695299/utilities/make.html), classic task runners
 * [npm](https://www.npmjs.com/), [Grunt](https://gruntjs.com/), Node.js task runners
 * [rake](https://ruby.github.io/rake/), a preiminent Ruby task runner
 * Not to be confused with [Rezz](http://officialrezz.com/), a preiminent DJ
