@@ -75,19 +75,19 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 
 # SEE ALSO
 
-* [autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html), a preiminent GNU/Linux build system
 * [batsch](https://batsh.org/), a preprocessing language that compiles to bash and MS-DOS bat files (somewhat defunct)
 * [cling](https://root.cern/cling/), a C++ interpreter
 * [cmake](https://cmake.org/), a preiminent cross-platform build system
 * [dale](https://github.com/mcandre/dale), a D task runner
 * [ejm98](http://www.ascii-art.de/ascii/mno/owl.txt) for Athena's prior artwork
-* [Gradle](https://gradle.org/) / [Maven](https://maven.apache.org/) / [Ant](https://ant.apache.org/), preiminent JVM build tools
+* [GNU autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html), a build system for Linux C/C++ projects
+* [Gradle](https://gradle.org/), a build system for JVM projects
 * [lake](https://luarocks.org/modules/steved/lake), a Lua task runner
-* [mage](https://magefile.org/), a preiminent Go task runner
-* [make](https://pubs.opengroup.org/onlinepubs/009695299/utilities/make.html), a classic task runner
+* [Mage](https://magefile.org/), a task runner for Go projects
 * [npm](https://www.npmjs.com/), [Grunt](https://gruntjs.com/), Node.js task runners
-* [rake](https://ruby.github.io/rake/), a preiminent Ruby task runner
-* Not to be confused with [Rezz](http://officialrezz.com/), a preiminent DJ
+* [POSIX make](https://pubs.opengroup.org/onlinepubs/009695299/utilities/make.html), a task runner standard for C/C++ and various other software projects
+* [Rake](https://ruby.github.io/rake/), a task runner for Ruby projects
+* Not to be confused with [Rezz](http://officialrezz.com/), the DJ
 * [sail](https://github.com/mcandre/sail), a fast C/C++ source file identifier
 * [Shake](https://shakebuild.com/), a preiminent Haskell task runner
 * [stank](https://github.com/mcandre/stank), a collection of POSIX-y shell script linter tools
