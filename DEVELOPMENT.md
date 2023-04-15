@@ -2,7 +2,7 @@
 
 * a [C++](https://www.cplusplus.com/) compiler with full C++17 support (e.g. clang 9+, g++ 9+, MSVC 19+)
 * [cmake](https://cmake.org/) 3+
-* [make](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html) or [ninja](https://ninja-build.org/)
+* a POSIX compliant [make](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html) implementation (e.g. GNU make, BSD make, etc.)
 * [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
 * [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
 * [cppcheck](https://cppcheck.sourceforge.io/)
@@ -10,10 +10,11 @@
 * [Docker](https://www.docker.com/) 20.10.12+
 * [snek](https://github.com/mcandre/snek) 0.0.2 with an x86_64 host
 * [GNU findutils](https://www.gnu.org/software/findutils/)
+* a POSIX compliant [sh](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sh.html) implementation (e.g. bash, ksh, zsh)
 * [sail](https://github.com/mcandre/sail) 0.0.1
 * [Python](https://www.python.org/) 3.11.2+
-* a POSIX compliant [sh](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sh.html) implementation (e.g. bash, ksh, zsh)
-* Provision additional dev tools with `./install`
+* [Rust](https://www.rust-lang.org/en-US/) 1.68.2+
+* Provision additional dev tools with `make -f install.mk`
 
 ## Recommended
 

@@ -1,6 +1,0 @@
-#!/bin/sh
-unset IFS
-set -euf
-
-pip3 install --upgrade pip setuptools
-pip3 install -r requirements-dev.txt
