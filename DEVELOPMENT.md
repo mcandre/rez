@@ -2,6 +2,7 @@
 
 * a [C++](https://www.cplusplus.com/) compiler with full C++17 support (e.g. clang 9+, g++ 9+, MSVC 19+)
 * [cmake](https://cmake.org/) 3+
+* [make](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html) or [ninja](https://ninja-build.org/)
 * [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
 * [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
 * [cppcheck](https://cppcheck.sourceforge.io/)

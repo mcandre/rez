@@ -68,6 +68,8 @@ rez is regularly tested for cross-platform support on Linux, macOS, and Windows.
 ## Recommended
 
 * [direnv](https://direnv.net/) / [posh-direnv](https://github.com/takekazuomi/posh-direnv)
+* [cmake](https://cmake.org/) 3+
+* [make](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html) or [ninja](https://ninja-build.org/)
 
 # CONTRIBUTING
 
