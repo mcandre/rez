@@ -87,6 +87,7 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 * [lake](https://luarocks.org/modules/steved/lake), a Lua task runner
 * [Mage](https://magefile.org/), a task runner for Go projects
 * [npm](https://www.npmjs.com/), [Grunt](https://gruntjs.com/), Node.js task runners
+* [nobuild](https://github.com/tsoding/nobuild), another freeform C/C++ task runner
 * [POSIX make](https://pubs.opengroup.org/onlinepubs/009695299/utilities/make.html), a task runner standard for C/C++ and various other software projects
 * [Rake](https://ruby.github.io/rake/), a task runner for Ruby projects
 * Not to be confused with [Rezz](http://officialrezz.com/), the DJ
