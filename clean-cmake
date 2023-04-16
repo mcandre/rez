@@ -7,13 +7,22 @@ rm -rf latex || :
 rm -f debug.log || :
 rm -f install_manifest.txt || :
 rm -rf debug || :
-rm -rf Testing || :
+rm -rf debug.log || :
 rm -f Makefile || :
+rm -f build.ninja || :
+rm -f .ninja_deps || :
+rm -f .ninja_log || :
+rm -rf Testing || :
+rm -f CTestTestfile.cmake || :
 rm -rf x64 || :
 rm -rf CMakeFiles || :
 rm -f CMakeCache.txt || :
 rm -f cmake_install.cmake || :
-rm -f CTestTestfile.cmake || :
+rm -f conanbuildinfo.cmake || :
+rm -f conanbuildinfo.txt || :
+rm -f conaninfo.txt || :
+rm -f graph_info.json || :
+rm -f conan.lock || :
 
 find . \
     -name '*.vcxproj*' \

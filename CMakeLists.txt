@@ -7,6 +7,13 @@ set(EXECUTABLE_OUTPUT_PATH "bin")
 set(ARTIFACT_EXT)
 set(TARGET_FLAG)
 
+set_property(
+    DIRECTORY .
+    APPEND PROPERTY
+    ADDITIONAL_CLEAN_FILES
+    "${EXECUTABLE_OUTPUT_PATH};debug;debug.log;Makefile;build.ninja;.ninja_deps;Testing;CTestTestfile.cmake;CMakeFiles;CMakeCache.txt;cmake_install.cmake;conanbuildinfo.cmake;conanbuildinfo.txt;conaninfo.txt;graph_info.json;conan.lock"
+)
+
 if(DEFINED ENV{TARGET})
     set(STATIC_FLAG -static)
 
@@ -119,7 +126,8 @@ else()
     add_custom_target(uninstall COMMAND rm -f "${INSTALL_FILE}")
 endif()
 
-add_custom_target(safety COMMAND safety check)
+add_custom_target(audit COMMAND safety check)
+
 add_custom_target(cppcheck COMMAND cppcheck -q --force --enable=all --inline-suppr --suppressions-list=suppressions.cfg --error-exitcode=1 -U__SANITIZE_ADDRESS__ -I include src)
 add_custom_target(cpplint COMMAND cpplint --recursive include src)
 add_custom_target(clang-format COMMAND sail include src | xargs -n 1 clang-format -i)
@@ -133,5 +141,4 @@ else()
     add_custom_target(lint DEPENDS cppcheck cpplint clang-format yamllint unmake)
 endif()
 
-add_custom_target(audit DEPENDS safety)
 add_custom_target(doc COMMAND doxygen Doxyfile)
