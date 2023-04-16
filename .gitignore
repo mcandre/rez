@@ -15,6 +15,9 @@ leak-*
 *.vcxproj.filters
 *.sln
 *.dir
+build.ninja
+.ninja_deps
+.ninja_log
 # Created by https://www.toptal.com/developers/gitignore/api/c++,cmake,VisualStudio
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,cmake,VisualStudio
 
