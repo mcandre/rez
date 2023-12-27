@@ -78,6 +78,7 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 # SEE ALSO
 
 * [batsch](https://batsh.org/), a preprocessing language that compiles to bash and MS-DOS bat files (somewhat defunct)
+* [beltaloada](https://github.com/mcandre/beltaloada), a guide to writing build systems for (POSIX) sh
 * [cling](https://root.cern/cling/), a C++ interpreter
 * [cmake](https://cmake.org/), a preiminent cross-platform build system
 * [dale](https://github.com/mcandre/dale), a D task runner
@@ -95,7 +96,6 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 * [Shake](https://shakebuild.com/), a preiminent Haskell task runner
 * [stank](https://github.com/mcandre/stank), a collection of POSIX-y shell script linter tools
 * [tinyrick](https://github.com/mcandre/tinyrick), a Rust task runner
-* [vast](https://github.com/mcandre/vast), a POSIX sh task runner
 * [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) / [Cygwin](https://www.cygwin.com/) / [MinGW](https://www.mingw-w64.org/) / [MSYS2](https://www.msys2.org/) / [Git Bash](https://git-scm.com/downloads) / [Strawberry Perl](https://strawberryperl.com/) provide shims for many GNU/Linux components on Windows hosts
 
 Generate and retire artifacts, like so many tears in the rain...
