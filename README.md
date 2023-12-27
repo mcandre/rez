@@ -57,7 +57,7 @@ https://github.com/mcandre/rez/releases
 
 # LICENSE
 
-FreeBSD
+BSD-2-Clause
 
 # RUNTIME REQUIREMENTS
 
