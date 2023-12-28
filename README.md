@@ -86,6 +86,7 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 * [GNU autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html), a build system for Linux C/C++ projects
 * [Gradle](https://gradle.org/), a build system for JVM projects
 * [lake](https://luarocks.org/modules/steved/lake), a Lua task runner
+* [lichen](https://github.com/mcandre/lichen), a sed task runner
 * [Mage](https://magefile.org/), a task runner for Go projects
 * [npm](https://www.npmjs.com/), [Grunt](https://gruntjs.com/), Node.js task runners
 * [nobuild](https://github.com/tsoding/nobuild), another freeform C/C++ task runner
