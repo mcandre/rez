@@ -12,7 +12,7 @@
 * [GNU findutils](https://www.gnu.org/software/findutils/)
 * a POSIX compliant [sh](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sh.html) implementation (e.g. bash, ksh, zsh)
 * [sail](https://github.com/mcandre/sail) 0.0.1
-* [Python](https://www.python.org/) 3.11.2+
+* [Python](https://www.python.org/) 3.12.1+
 * [Rust](https://www.rust-lang.org/en-US/) 1.68.2+
 * Provision additional dev tools with `make -f install.mk`
 
