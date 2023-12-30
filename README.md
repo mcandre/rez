@@ -85,6 +85,7 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 * [ejm98](http://www.ascii-art.de/ascii/mno/owl.txt) for Athena's prior artwork
 * [GNU autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html), a build system for Linux C/C++ projects
 * [Gradle](https://gradle.org/), a build system for JVM projects
+* [jelly](https://github.com/mcandre/jelly), a JSON task runner
 * [lake](https://luarocks.org/modules/steved/lake), a Lua task runner
 * [lichen](https://github.com/mcandre/lichen), a sed task runner
 * [Mage](https://magefile.org/), a task runner for Go projects
