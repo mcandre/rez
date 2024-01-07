@@ -32,7 +32,7 @@ for DOXYGEN_FILE in $DOXYGEN_FILES; do
     PROJECT_BASE="$(dirname -- "$DOXYGEN_FILE")"
     PROJECT="$(readlink -f "$PROJECT_BASE")"
 
-    cd "${PROJECT}"
+    cd "$PROJECT"
     doxygen Doxyfile
     mkdir -p "${PAGE_REPO}/${PROJECT_BASE}"
     cp -r html/. "${PAGE_REPO}/${PROJECT_BASE}/"
