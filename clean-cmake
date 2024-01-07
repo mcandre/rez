@@ -23,16 +23,9 @@ rm -f graph_info.json || :
 rm -f conan.lock || :
 
 find . \
-    -name '*.vcxproj*' \
-    -print |
-    xargs -n 1 rm -f || :
-
-find . \
-    -name '*.sln' \
-    -print |
-    xargs -n 1 rm -f || :
-
-find . \
-    -name '*.dir' \
-    -print |
-    xargs -n 1 rm -rf || :
+    \( \
+        -name '*.vcxproj*' -o \
+        -name '*.sln' -o \
+        -name '*.dir' \
+    \) \
+    -execdir rm -rf "{}" + || :
