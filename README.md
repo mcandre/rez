@@ -93,6 +93,7 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 * [nobuild](https://github.com/tsoding/nobuild), another freeform C/C++ task runner
 * [POSIX make](https://pubs.opengroup.org/onlinepubs/009695299/utilities/make.html), a task runner standard for C/C++ and various other software projects
 * [Rake](https://ruby.github.io/rake/), a task runner for Ruby projects
+* [Rebar3](https://www.rebar3.org/), a build system for Erlang projects
 * Not to be confused with [Rezz](http://officialrezz.com/), the DJ
 * [sail](https://github.com/mcandre/sail), a fast C/C++ source file identifier
 * [Shake](https://shakebuild.com/), a preiminent Haskell task runner
