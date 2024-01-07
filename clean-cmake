@@ -24,15 +24,15 @@ rm -f conan.lock || :
 
 find . \
     -name '*.vcxproj*' \
-    -print \
-    -exec rm -f '{}' \; || :
+    -print |
+    xargs -n 1 rm -f || :
 
 find . \
     -name '*.sln' \
-    -print \
-    -exec rm -f '{}' \; || :
+    -print |
+    xargs -n 1 rm -f || :
 
 find . \
     -name '*.dir' \
-    -print \
-    -exec rm -rf '{}' \; || :
+    -print |
+    xargs -n 1 rm -rf || :
