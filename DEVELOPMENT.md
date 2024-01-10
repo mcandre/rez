@@ -20,6 +20,7 @@
 
 * [ASDF](https://asdf-vm.com/) 0.10 (run `asdf reshim` after provisioning)
 * [direnv](https://direnv.net/) 2
+* an [open](https://github.com/mcandre/dotfiles) shim for non-BSD environments
 
 # AUDIT
 
@@ -57,7 +58,7 @@ $ cmake --build . --target lint
 
 ```console
 # cmake --build . --target doc
-$ karp html/index.html
+$ open html/index.html
 ```
 
 # PORT
