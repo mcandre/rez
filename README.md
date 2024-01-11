@@ -103,5 +103,6 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 * [stank](https://github.com/mcandre/stank), a collection of POSIX-y shell script linter tools
 * [tinyrick](https://github.com/mcandre/tinyrick), a Rust task runner
 * [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) / [Cygwin](https://www.cygwin.com/) / [MinGW](https://www.mingw-w64.org/) / [MSYS2](https://www.msys2.org/) / [Git Bash](https://git-scm.com/downloads) / [Strawberry Perl](https://strawberryperl.com/) provide shims for many GNU/Linux components on Windows hosts
+* [yao](https://github.com/mcandre/yao), a task runner for Common LISP projects
 
 Generate and retire artifacts, like so many tears in the rain...
