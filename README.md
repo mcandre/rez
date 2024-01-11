@@ -98,6 +98,7 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 * [Rebar3](https://www.rebar3.org/), a build system for Erlang projects
 * Not to be confused with [Rezz](http://officialrezz.com/), the DJ
 * [sail](https://github.com/mcandre/sail), a fast C/C++ source file identifier
+* [sbt](https://www.scala-sbt.org/index.html), a build system for Scala projects
 * [Shake](https://shakebuild.com/), a preiminent Haskell task runner
 * [stank](https://github.com/mcandre/stank), a collection of POSIX-y shell script linter tools
 * [tinyrick](https://github.com/mcandre/tinyrick), a Rust task runner
