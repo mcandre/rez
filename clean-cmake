@@ -28,4 +28,4 @@ find . \
         -name '*.sln' -o \
         -name '*.dir' \
     \) \
-    -execdir rm -rf "{}" + || :
+    -exec rm -rf "{}" \; || :

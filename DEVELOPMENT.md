@@ -18,6 +18,9 @@
 
 ## Recommended
 
+* a host capable of running musl/Linux containers (e.g. a GNU/Linux, musl/Linux, macOS, or Windows host)
+* [Docker First Aid Kit](https://github.com/mcandre/docker-first-aid-kit)
+* Apply `DOCKER_DEFAULT_PLATFORM` = `linux/amd64` environment variable
 * [ASDF](https://asdf-vm.com/) 0.10 (run `asdf reshim` after provisioning)
 * [direnv](https://direnv.net/) 2
 * macOS [open](https://ss64.com/mac/open.html) or equivalent alias
@@ -65,6 +68,7 @@ $ open html/index.html
 
 ```console
 $ snek
+$ sh -c "cd bin && tar czf rez-0.0.11.tgz rez-0.0.11"
 ```
 
 # CLEAN

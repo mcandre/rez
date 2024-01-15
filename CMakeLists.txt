@@ -19,7 +19,7 @@ if(DEFINED ENV{TARGET})
 
     if(DEFINED ENV{TARGET} AND "$ENV{TARGET}" MATCHES "w64")
         set(CMAKE_CXX_COMPILER "$ENV{TARGET}-g++-posix")
-        set(CMAKE_C_COMPILER "$ENV{TARGET}-gcc-10-posix")
+        set(CMAKE_C_COMPILER "$ENV{TARGET}-gcc-posix")
         set(ARTIFACT_EXT .exe)
     else()
         if("$ENV{TARGET}" MATCHES "darwin")

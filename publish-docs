@@ -22,7 +22,7 @@ find \
     . \
     -type f \
     -not -path '*/\.*' \
-    -execdir rm -rf "{}" + || :
+    -exec rm -rf "{}" \; || :
 
 cd "$TRAVIS_BUILD_DIR"
 
