@@ -14,6 +14,7 @@
 * [sail](https://github.com/mcandre/sail) 0.0.2
 * POSIX compatible [sh](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sh.html)
 * [snek](https://github.com/mcandre/snek) 0.0.2 with an x86_64 host
+* POSIX compatible [tar](https://pubs.opengroup.org/onlinepubs/7908799/xcu/tar.html)
 * Provision additional dev tools with `make -f install.mk`
 
 ## Recommended
@@ -24,6 +25,9 @@
 * [ASDF](https://asdf-vm.com/) 0.10 (run `asdf reshim` after provisioning)
 * [direnv](https://direnv.net/) 2
 * macOS [open](https://ss64.com/mac/open.html) or equivalent alias
+* a UNIX environment, such as macOS, Linux, BSD, [WSL](https://learn.microsoft.com/en-us/windows/wsl/), etc.
+
+Non-UNIX environments may produce subtle adverse effects when linting or generating application ports.
 
 # AUDIT
 
