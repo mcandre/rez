@@ -10,11 +10,9 @@ set(BANNER "$ENV{BANNER}")
 
 project(rez)
 
-file(
-    GLOB_RECURSE
-    CXX_SOURCE_FILES
-    *.[CcHhIi]pp *.[CcHhIi]xx *.[CcHhIi]++ *.[Cc][Cc] *.[Hh][Hh] *.[Ii][Ii] *.[CcHhIi]
-)
+file(GLOB_RECURSE C_SOURCE_FILES *.h *.c)
+file(GLOB_RECURSE CPP_SOURCE_FILES *.cppm *.hpp *.cpp)
+file(GLOB_RECURSE CXX_SOURCE_FILES *.cppm *.hpp *.cpp *.h *.c)
 
 if(
     NOT DEFINED ENV{TARGET} OR
