@@ -18,6 +18,7 @@
 	port \
 	publish \
 	safety \
+	snyk \
 	test \
 	uninstall \
 	unmake
@@ -26,8 +27,7 @@ BANNER=rez-0.0.15
 
 all: build
 
-audit: init
-	cmake --build build --target audit
+audit: safety snyk
 
 build: init
 	cmake --build build --config Release
@@ -50,6 +50,9 @@ port:
 
 safety:
 	safety check
+
+snyk:
+	snyk test --unmanaged --trust-policies ~/.conan/data
 
 uninstall: init
 	cmake --build build --target uninstall
