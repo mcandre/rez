@@ -1,6 +1,0 @@
-#!/bin/sh
-unset IFS
-set -euf
-
-rm -rf html || :
-rm -rf latex || :

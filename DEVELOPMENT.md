@@ -1,19 +1,19 @@
 # BUILDTIME REQUIREMENTS
 
 * a [C++](https://www.cplusplus.com/) compiler with full C++17 support (e.g. clang 9+, g++ 9+, MSVC 19+)
-* [cmake](https://cmake.org/) 3+
 * [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
 * [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
-* [cppcheck](https://cppcheck.sourceforge.io/)
+* [cmake](https://cmake.org/) 3.5+
+* [cppcheck](https://cppcheck.sourceforge.io/) 2.13.0+
 * [Doxygen](https://www.doxygen.nl/index.html)
 * [Docker](https://www.docker.com/) 20.10.12+
 * GNU or BSD [findutils](https://en.wikipedia.org/wiki/Find_(Unix))
 * POSIX compatible [make](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html)
 * [Python](https://www.python.org/) 3.12.1+
-* [Rust](https://www.rust-lang.org/en-US/) 1.68.2+
+* [Rust](https://www.rust-lang.org/en-US/) 1.75.0+
 * [sail](https://github.com/mcandre/sail) 0.0.2
 * POSIX compatible [sh](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sh.html)
-* [snek](https://github.com/mcandre/snek) 0.0.2 with an x86_64 host
+* [snek](https://github.com/mcandre/snek) 0.0.4
 * POSIX compatible [tar](https://pubs.opengroup.org/onlinepubs/7908799/xcu/tar.html)
 * Provision additional dev tools with `make -f install.mk`
 
@@ -32,51 +32,48 @@ Non-UNIX environments may produce subtle adverse effects when linting or generat
 # AUDIT
 
 ```console
-$ cmake .
-$ cmake --build . --target audit
+$ make audit
 ```
 
 # BUILD
 
 ```console
-$ cmake .
-$ cmake --build . --config Release
+$ make [build]
 ```
 
 # INSTALL
 
 ```console
-$ cmake --build . --target install
+$ make install
 ```
 
 # UNINSTALL
 
 ```console
-$ cmake --build . --target uninstall
+$ make uninstall
 ```
 
 # LINT
 
 ```console
-$ cmake --build . --target lint
+$ make lint
 ```
 
 # DOCUMENT
 
 ```console
-# cmake --build . --target doc
+# make doc
 $ open html/index.html
 ```
 
 # PORT
 
 ```console
-$ snek
-$ sh -c "cd bin && tar czf rez-0.0.11.tgz rez-0.0.11"
+$ make port
 ```
 
 # CLEAN
 
 ```console
-$ sh clean
+$ make clean
 ```

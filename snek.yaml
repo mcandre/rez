@@ -1,5 +1,5 @@
 ---
-build_command: "./clean-cmake; cmake . && cmake --build . --config Release"
+build_command: "make clean-cmake; make"
 ships:
 - image: "mcandre/snek:darwin"
   targets:

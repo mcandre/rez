@@ -43,6 +43,7 @@ static void Banner() {
 int main(int argc, const char **argv) {
     const std::vector<std::string_view> args{ argv, argv + argc };
 
+    // cppcheck-suppress knownConditionTrueFalse
     if (args.empty()) {
         std::cerr << "error: missing program name" << std::endl;
         return EXIT_FAILURE;

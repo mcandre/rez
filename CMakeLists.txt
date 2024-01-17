@@ -1,18 +1,38 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.5)
+
 set(CMAKE_MESSAGE_LOG_LEVEL "WARNING")
-
-set(BANNER rez-0.0.11)
-
-set(EXECUTABLE_OUTPUT_PATH "bin")
+set(EXECUTABLE_OUTPUT_PATH "../bin")
 set(ARTIFACT_EXT)
 set(TARGET_FLAG)
+set(BANNER "$ENV{BANNER}")
 
-set_property(
-    DIRECTORY .
-    APPEND PROPERTY
-    ADDITIONAL_CLEAN_FILES
-    "${EXECUTABLE_OUTPUT_PATH};debug;debug.log;Makefile;build.ninja;.ninja_deps;Testing;CTestTestfile.cmake;CMakeFiles;CMakeCache.txt;cmake_install.cmake;conanbuildinfo.cmake;conanbuildinfo.txt;conaninfo.txt;graph_info.json;conan.lock"
+if(
+    NOT DEFINED ENV{TARGET} OR
+    (
+        (NOT "$ENV{TARGET}" MATCHES "netbsd") AND
+        (NOT "$ENV{TARGET}" MATCHES "openbsd")
+    )
 )
+    find_program(CPPCHECK_PATH "cppcheck")
+
+    if ("${CPPCHECK_PATH}" STREQUAL "CPPCHECK_PATH-NOTFOUND")
+        message(FATAL_ERROR "cppcheck not found")
+    endif()
+
+    set(
+        CPPCHECK
+        "cppcheck"
+        "-q"
+        "--force"
+        "--enable=all"
+        "--inline-suppr"
+        "--suppressions-list=../suppressions.cfg"
+        "--error-exitcode=1"
+        "-U__SANITIZE_ADDRESS__"
+    )
+    set(CMAKE_C_CPPCHECK "${CPPCHECK}")
+    set(CMAKE_CXX_CPPCHECK "${CPPCHECK}")
+endif()
 
 if(DEFINED ENV{TARGET})
     set(STATIC_FLAG -static)
@@ -54,7 +74,7 @@ if(DEFINED ENV{TARGET})
         endif()
     endif()
 
-    set(EXECUTABLE_OUTPUT_PATH "bin/${BANNER}/$ENV{TARGET}")
+    set(EXECUTABLE_OUTPUT_PATH "../bin/${BANNER}/$ENV{TARGET}")
     set(CPPFLAGS "${CPPFLAGS} ${STATIC_FLAG}")
 endif()
 
@@ -111,7 +131,7 @@ if(DEFINED ENV{TARGET})
     elseif("$ENV{TARGET}" MATCHES "dragonflybsd")
         target_link_libraries(rez stdc++fs)
     elseif("$ENV{TARGET}" MATCHES "netbsd")
-        target_link_libraries(rez c++ c++abi unwind)
+        target_link_libraries(rez c++ c++abi gcc unwind)
     endif()
 endif()
 
@@ -128,17 +148,17 @@ endif()
 
 add_custom_target(audit COMMAND safety check)
 
-add_custom_target(cppcheck COMMAND cppcheck -q --force --enable=all --inline-suppr --suppressions-list=suppressions.cfg --error-exitcode=1 -U__SANITIZE_ADDRESS__ -I include src)
-add_custom_target(cpplint COMMAND cpplint --recursive include src)
-add_custom_target(clang-format COMMAND sail -print0 include src | xargs -0 -n 1 clang-format -i)
-add_custom_target(yamllint COMMAND yamllint -s .yamllint .)
-add_custom_target(unmake COMMAND unmake .)
+add_custom_target(cpplint COMMAND cpplint --recursive ../include ../src)
+add_custom_target(clang-format COMMAND sail -print0 ../include ../src | xargs -0 -n 1 clang-format -i)
+add_custom_target(yamllint COMMAND yamllint -s ../.yamllint ..)
+add_custom_target(unmake COMMAND unmake ..)
+add_custom_target(unmake_dry_run COMMAND unmake -n ..)
 
 # Missing linter ports
 if(MSVC)
-    add_custom_target(lint DEPENDS cppcheck yamllint unmake)
+    add_custom_target(lint DEPENDS yamllint unmake)
 else()
-    add_custom_target(lint DEPENDS cppcheck cpplint clang-format yamllint unmake)
+    add_custom_target(lint DEPENDS cpplint clang-format yamllint unmake unmake_dry_run)
 endif()
 
 add_custom_target(doc COMMAND doxygen Doxyfile)
