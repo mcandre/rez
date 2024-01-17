@@ -22,7 +22,7 @@
 	uninstall \
 	unmake
 
-BANNER=tinyrick-0.0.14
+BANNER=rez-0.0.15
 
 all: build
 
