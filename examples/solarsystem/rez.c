@@ -20,14 +20,14 @@
 
 #include <errno.h>
 #include <stdbool.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
 #if !defined(_MSC_VER)
-static int remove_cb(const char *path, __attribute__ ((unused)) const struct stat *sb, __attribute__ ((unused)) int typeflag, __attribute__ ((unused)) struct FTW *ftwbuf) {
+static int remove_cb(const char *path, __attribute__((unused)) const struct stat *sb, __attribute__((unused)) int typeflag, __attribute__((unused)) struct FTW *ftwbuf) {
     errno = 0;
     const int status = remove(path);
 
@@ -108,41 +108,41 @@ static void remove_all_abortable(const char *path) {
     }
 }
 
-static int cmake_init() {
-    return system("cmake .");
+static int cmake_init(void) {
+    return system("cmake -B build .");
 }
 
-static int build() {
+static int build(void) {
     const int status = cmake_init();
 
     if (status != EXIT_SUCCESS) {
         return status;
     }
 
-    return system("cmake --build . --config Release");
+    return system("cmake --build build --config Release");
 }
 
-static int install() {
+static int install(void) {
     const int status = build();
 
     if (status != EXIT_SUCCESS) {
         return status;
     }
 
-    return system("cmake --build . --target install");
+    return system("cmake --build build --target install");
 }
 
-static int uninstall() {
+static int uninstall(void) {
     const int status = cmake_init();
 
     if (status != EXIT_SUCCESS) {
         return status;
     }
 
-    return system("cmake --build . --target uninstall");
+    return system("cmake --build build --target uninstall");
 }
 
-static int run() {
+static int run(void) {
     const int status = install();
 
     if (status != EXIT_SUCCESS) {
@@ -152,128 +152,17 @@ static int run() {
     return system("solarsystem");
 }
 
-static int clean_bin() {
+static int clean_bin(void) {
     return remove_all("bin");
 }
 
-static int clean_junk_extensions(const char *path) {
-    const char *junk_extensions[] = {
-        ".dir",
-        ".filters",
-        ".obj",
-        ".sln",
-        ".vcxproj"
-    };
-    const size_t junk_extensions_sz = sizeof(junk_extensions)/sizeof(char*);
-    const char *extension = strrchr(path, '.');
-
-    if (extension) {
-        for (size_t i = 0; i < junk_extensions_sz; i++) {
-            if (extension && strcmp(extension, junk_extensions[i]) == 0) {
-                int status = remove_all(path);
-
-                if (status != 0) {
-                    return status;
-                }
-            }
-        }
-    }
-
+static int clean_cmake(void) {
+    remove_all_abortable("build");
     return EXIT_SUCCESS;
 }
 
-static int clean_msvc() {
-    remove_all_abortable("x64");
-    remove_all_abortable("x86");
-
-    errno = 0;
-    char *cwd = malloc(sizeof(char) * PATH_MAX);
-    if (!getcwd(cwd, PATH_MAX)) {
-        fprintf(stderr, "error: unable to access current working directory\n");
-        free(cwd);
-        return EXIT_FAILURE;
-    }
-
-    int status;
-
-#if defined(_MSC_VER)
-    char *glob = calloc(strlen(cwd) + 4, sizeof(char));
-    strcat(glob, cwd);
-    strcat(glob, "\\*");
-
-    WIN32_FIND_DATAA find_data;
-    HANDLE find_handle = FindFirstFileA(glob, &find_data);
-
-    if (find_handle == INVALID_HANDLE_VALUE) {
-        fprintf(stderr, "error: unable to traverse directory: %s\n", cwd);
-        free(glob);
-        free(cwd);
-        return EXIT_FAILURE;
-    }
-
-    while (FindNextFileA(find_handle, &find_data) != 0) {
-        status = clean_junk_extensions(find_data.cFileName);
-
-        if (status) {
-            free(glob);
-            free(cwd);
-            return status;
-        }
-    }
-
-    free(glob);
-#else
-    errno = 0;
-    DIR *d = opendir(cwd);
-
-    if (!d) {
-        fprintf(stderr, "error: unable to open directory: %s\n", cwd);
-        free(cwd);
-        return EXIT_FAILURE;
-    }
-    struct dirent *de;
-
-    while(true) {
-        errno = 0;
-        de = readdir(d);
-
-        if (errno) {
-            fprintf(stderr, "error: unable to traverse directory: %s\n", cwd);
-            free(cwd);
-            return EXIT_FAILURE;
-        }
-
-        if (!de) {
-            break;
-        }
-
-        const char *child = de->d_name;
-        status = clean_junk_extensions(child);
-
-        if (status) {
-            free(cwd);
-            return status;
-        }
-    }
-#endif
-    free(cwd);
-    return EXIT_SUCCESS;
-}
-
-static int clean_cmake() {
-    remove_all_abortable("install_manifest.txt");
-    remove_all_abortable("Makefile");
-    remove_all_abortable("CMakeFiles");
-    remove_all_abortable("CMakeCache.txt");
-    remove_all_abortable("cmake_install.cmake");
-    remove_all_abortable("CTestTestfile.cmake");
-    remove_all_abortable("Testing");
-    return EXIT_SUCCESS;
-}
-
-static int clean() {
+static int clean(void) {
     clean_bin();
-    clean_msvc();
     clean_cmake();
     return EXIT_SUCCESS;
 }
@@ -288,26 +177,24 @@ int main(int argc, const char **argv) {
         "clean",
         "clean_bin",
         "clean_cmake",
-        "clean_msvc",
         "cmake_init",
         "build",
         "install",
         "run",
         "uninstall"
     };
-    const size_t task_sz = sizeof(task_names)/sizeof(char*);
-    int (*task_functions[])() = {
+    const size_t task_sz = sizeof(task_names) / sizeof(char *);
+    int (*task_functions[])(void) = {
         &clean,
         &clean_bin,
         &clean_cmake,
-        &clean_msvc,
         &cmake_init,
         &build,
         &install,
         &run,
         &uninstall
     };
-    int (*default_task)() = run;
+    int (*default_task)(void) = run;
 
     if (argc == 1) {
         if (default_task()) {

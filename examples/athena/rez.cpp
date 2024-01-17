@@ -3,15 +3,15 @@
 #include <filesystem>
 #include <functional>
 #include <iostream>
-#include <string_view>
 #include <map>
+#include <string_view>
 #include <unordered_set>
 #include <vector>
 
 using std::literals::string_view_literals::operator""sv;
 
 static int cmake_init() {
-    return system("cmake .");
+    return system("cmake -B build .");
 }
 
 static int build() {
@@ -21,7 +21,7 @@ static int build() {
         return status;
     }
 
-    return system("cmake --build . --config Release");
+    return system("cmake --build build --config Release");
 }
 
 static int install() {
@@ -31,7 +31,7 @@ static int install() {
         return status;
     }
 
-    return system("cmake --build . --target install");
+    return system("cmake --build build --target install");
 }
 
 static int uninstall() {
@@ -41,7 +41,7 @@ static int uninstall() {
         return status;
     }
 
-    return system("cmake --build . --target uninstall");
+    return system("cmake --build build --target uninstall");
 }
 
 static int run() {
@@ -59,43 +59,13 @@ static int clean_bin() {
     return EXIT_SUCCESS;
 }
 
-static int clean_msvc() {
-    std::filesystem::remove_all("x64");
-    std::filesystem::remove_all("x86");
-
-    const std::unordered_set<std::string> junk_extensions{
-        ".dir",
-        ".filters",
-        ".obj",
-        ".sln",
-        ".vcxproj"
-    };
-
-    for (const std::filesystem::directory_entry &child : std::filesystem::directory_iterator(std::filesystem::current_path())) {
-        const std::filesystem::path child_path{ child.path() };
-
-        if (junk_extensions.find(child_path.extension().string()) != junk_extensions.end()) {
-            std::filesystem::remove_all(child_path);
-        }
-    }
-
-    return EXIT_SUCCESS;
-}
-
 static int clean_cmake() {
-    std::filesystem::remove_all("install_manifest.txt");
-    std::filesystem::remove_all("Makefile");
-    std::filesystem::remove_all("CMakeFiles");
-    std::filesystem::remove_all("CMakeCache.txt");
-    std::filesystem::remove_all("cmake_install.cmake");
-    std::filesystem::remove_all("CTestTestfile.cmake");
-    std::filesystem::remove_all("Testing");
+    std::filesystem::remove_all("build");
     return EXIT_SUCCESS;
 }
 
 static int clean() {
     clean_bin();
-    clean_msvc();
     clean_cmake();
     return EXIT_SUCCESS;
 }
@@ -116,7 +86,6 @@ int main(int argc, const char **argv) {
         { "clean"sv, clean },
         { "clean_bin"sv, clean_bin },
         { "clean_cmake"sv, clean_cmake },
-        { "clean_msvc"sv, clean_msvc },
         { "cmake_init"sv, cmake_init },
         { "build"sv, build },
         { "install"sv, install },
