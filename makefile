@@ -22,7 +22,7 @@
 	test-solarsystem \
 	uninstall
 
-BANNER=rez-0.0.15
+BANNER=rez-0.0.16
 
 all: build
 
