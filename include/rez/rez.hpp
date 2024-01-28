@@ -250,7 +250,7 @@ struct Config {
      * @throws an error in the event of a problem
      */
     void Load();
-};
+} __attribute__((aligned(128)));
 
 /**
  * @brief << formats a Config to an ostream.

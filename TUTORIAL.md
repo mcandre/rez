@@ -84,7 +84,7 @@ int main(int argc, const char **argv) {
                 return status;
             }
         } catch (std::out_of_range &e) {
-            std::cerr << "no such task: " << arg << std::endl;
+            std::cerr << "no such task: " << arg << "\n";
 
             return EXIT_FAILURE;
         }
@@ -129,7 +129,7 @@ int main(int argc, const char **argv) {
 
     if (args.front() == "-l") {
         for (const auto &[name, _] : tasks) {
-            std::cout << name << std::endl;
+            std::cout << name << "\n";
         }
 
         return EXIT_SUCCESS;
@@ -205,7 +205,7 @@ static int clean_msvc() {
         const std::filesystem::path child_path{ child.path() };
 
         if (junk_extensions.find(child_path.extension().string()) != junk_extensions.end()) {
-            std::cout << "Testing path match. This path would be removed: " << child_path << std::endl;
+            std::cout << "Testing path match. This path would be removed: " << child_path << "\n";
             std::filesystem::remove_all(child_path);
         }
     }

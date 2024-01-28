@@ -15,22 +15,20 @@
  *
  * @param program the invoked name of this program
  */
-static void Usage(const std::string_view &program) {
-    std::cerr << "usage: " << program << " [OPTION] [<task> [<task> [<task>...]]]" << std::endl
-              << std::endl;
-
-    std::cerr << "-l\tList available tasks" << std::endl
-              << "-c\tClean rez internal cache" << std::endl
-              << "-d\tEnable debugging information" << std::endl
-              << "-v\tShow version information" << std::endl
-              << "-h\tShow usage information" << std::endl;
+void Usage(const std::string_view &program) {
+    std::cerr << "usage: " << program << " [OPTION] [<task> [<task> [<task>...]]]\n\n";
+    std::cerr << "-l\tList available tasks\n"
+              << "-c\tClean rez internal cache\n"
+              << "-d\tEnable debugging information\n"
+              << "-v\tShow version information\n"
+              << "-h\tShow usage information\n";
 }
 
 /**
  * @brief Banner emits version information.
  */
-static void Banner() {
-    std::cout << "rez " << rez::Version << std::endl;
+void Banner() {
+    std::cout << "rez " << rez::Version << "\n";
 }
 
 /**
@@ -45,7 +43,7 @@ int main(int argc, const char **argv) {
 
     // cppcheck-suppress knownConditionTrueFalse
     if (args.empty()) {
-        std::cerr << "error: missing program name" << std::endl;
+        std::cerr << "error: missing program name\n";
         return EXIT_FAILURE;
     }
 
@@ -78,19 +76,19 @@ int main(int argc, const char **argv) {
         break;
     }
 
-    const std::vector<std::string_view> rest{ args.begin() + i, args.end() };
+    const std::vector<std::string_view> rest{ args.begin() + static_cast<ptrdiff_t>(i), args.end() };
 
     try {
         config.Load();
     } catch (const std::exception &err) {
-        std::cerr << err.what() << std::endl;
+        std::cerr << err.what() << "\n";
     }
 
     if (config.debug) {
-        std::cerr << config << std::endl;
+        std::cerr << config << "\n";
     }
 
-    bool artifact_cache_miss = !std::filesystem::exists(config.artifact_file_path) ||
+    const bool artifact_cache_miss = !std::filesystem::exists(config.artifact_file_path) ||
                                std::filesystem::last_write_time(config.artifact_file_path) < std::filesystem::last_write_time(config.task_definition_path);
 
     if (artifact_cache_miss) {
@@ -98,13 +96,13 @@ int main(int argc, const char **argv) {
         const std::string build_command{ config.build_command };
 
         if (config.debug) {
-            std::cerr << "running build command: " << build_command << std::endl;
+            std::cerr << "running build command: " << build_command << "\n";
         }
 
         const int build_status{ system(build_command.c_str()) };
 
         if (build_status != EXIT_SUCCESS) {
-            std::cerr << "error building task file: " << config.task_definition_path.string() << std::endl;
+            std::cerr << "error building task file: " << config.task_definition_path.string() << "\n";
             return build_status;
         }
     }
@@ -120,7 +118,7 @@ int main(int argc, const char **argv) {
     const std::string run_command{ ss.str() };
 
     if (config.debug) {
-        std::cerr << "running command: " << run_command << std::endl;
+        std::cerr << "running command: " << run_command << "\n";
     }
 
     if (system(run_command.c_str())) {

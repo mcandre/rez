@@ -12,34 +12,36 @@
 	build \
 	clean \
 	doc \
-	init \
+	cmake-init \
 	install \
 	lint \
 	port \
 	publish \
-	safety \
-	snyk \
 	test \
-	uninstall \
-	unmake
+	test-athena \
+	test-solarsystem \
+	uninstall
 
 BANNER=rez-0.0.15
 
 all: build
 
-audit: safety snyk
+audit: cmake-init
+	cmake --build build --target audit
 
-build: init
+build: cmake-init
 	cmake --build build --config Release
+	mkdir -p bin/$(BANNER)/$(TARGET)
+	cp build/bin/* bin/$(BANNER)/$(TARGET)
+
+cmake-init:
+	BANNER="$(BANNER)" cmake -B build -G "Unix Makefiles"
 
 doc: init
 	BANNER=$(BANNER) cmake --build build --target doc
 
-lint: init unmake
+lint: cmake-init
 	cmake --build build --target lint
-
-init:
-	BANNER="$(BANNER)" cmake -B build
 
 install: build
 	cmake --build build --target install
@@ -48,18 +50,16 @@ port:
 	snek
 	sh -c "cd bin && tar czf $(BANNER).tgz $(BANNER)"
 
-safety:
-	safety check
+test: test-athena test-solarsystem
 
-snyk:
-	snyk test --unmanaged --trust-policies ~/.conan/data
+test-athena:
+	sh -c "cd examples/athena && source .envrc && rez && rez clean && rez -c"
 
-uninstall: init
+test-solarsystem:
+	sh -c "cd examples/solarsystem && source .envrc && rez && rez clean && rez -c"
+
+uninstall: cmake-init
 	cmake --build build --target uninstall
-
-unmake:
-	unmake .
-	unmake -n .
 
 clean: clean-bin clean-cmake clean-doc
 

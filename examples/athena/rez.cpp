@@ -95,7 +95,7 @@ int main(int argc, const char **argv) {
 
     if (args.front() == "-l") {
         for (const auto &[name, _] : tasks) {
-            std::cout << name << std::endl;
+            std::cout << name << "\n";
         }
 
         return EXIT_SUCCESS;
@@ -109,7 +109,7 @@ int main(int argc, const char **argv) {
                 return EXIT_FAILURE;
             }
         } catch (std::out_of_range &e) {
-            std::cerr << "no such task: " << arg << std::endl;
+            std::cerr << "no such task: " << arg << "\n";
             return EXIT_FAILURE;
         }
     }

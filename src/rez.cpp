@@ -44,13 +44,13 @@ std::filesystem::path ApplyBinaryExtension(const std::filesystem::path &basename
 std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     char *transient{ nullptr };
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(__MINGW32__)
     size_t len{ 0 };
     errno = 0;
     _dupenv_s(&transient, &len, key.c_str());
 
     if (errno != 0) {
-        std::cerr << "error querying environment variable " << key << " errno: " << errno << std::endl;
+        std::cerr << "error querying environment variable " << key << " errno: " << errno << "\n";
         free(transient);
         return std::nullopt;
     }
@@ -58,7 +58,7 @@ std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     if (transient != nullptr) {
         const std::string s{ transient };
         free(transient);
-        return std::optional(s);
+        return s;
     }
 
     free(transient);
@@ -66,8 +66,8 @@ std::optional<std::string> GetEnvironmentVariable(const std::string &key) {
     transient = getenv(key.c_str());
 
     if (transient != nullptr) {
-        const std::string s{ transient };
-        return std::optional(s);
+        std::string s{ transient };
+        return s;
     }
 #endif
 
@@ -89,7 +89,7 @@ void Config::ApplyMSVCToolchain() const {
 
     if (cache_size == static_cast<std::uintmax_t>(-1) || cache_size == 0) {
         if (debug) {
-            std::cerr << "querying msvc toolchain..." << std::endl;
+            std::cerr << "querying msvc toolchain...\n";
         }
 
         std::string query_path(DefaultMSVCToolchainQueryScript);
@@ -115,7 +115,7 @@ void Config::ApplyMSVCToolchain() const {
         const std::string query_command{ ss.str() };
 
         if (debug) {
-            std::cerr << "running msvc query command: " << query_command << std::endl;
+            std::cerr << "running msvc query command: " << query_command << "\n";
         }
 
         errno = 0;
@@ -199,7 +199,7 @@ void Config::Load() {
         const std::optional<std::string> compiler_override{ GetEnvironmentVariable("CXX"s) };
 
         if (compiler_override.has_value()) {
-            const std::string compiler_override_s{ *compiler_override };
+            const std::string &compiler_override_s = *compiler_override;
 
             if (!compiler_override_s.empty()) {
                 compiler = compiler_override_s;
@@ -209,7 +209,7 @@ void Config::Load() {
         const std::optional<std::string> compiler_override{ GetEnvironmentVariable("CC"s) };
 
         if (compiler_override.has_value()) {
-            const std::string compiler_override_s{ *compiler_override };
+            const std::string &compiler_override_s = *compiler_override;
 
             if (!compiler_override_s.empty()) {
                 compiler = compiler_override_s;
@@ -233,7 +233,7 @@ void Config::Load() {
     std::string flags_cpp;
 
     if (flags_cpp_opt.has_value()) {
-        const std::string flags{ *flags_cpp_opt };
+        const std::string &flags = *flags_cpp_opt;
 
         if (!flags.empty()) {
             flags_cpp = flags;
@@ -247,7 +247,7 @@ void Config::Load() {
         const std::optional<std::string> flags_cxx_opt{ rez::GetEnvironmentVariable("CXXFLAGS") };
 
         if (flags_cxx_opt.has_value()) {
-            const std::string flags{ *flags_cxx_opt };
+            const std::string &flags = *flags_cxx_opt;
 
             if (!flags.empty()) {
                 flags_cxx = flags;
@@ -257,7 +257,7 @@ void Config::Load() {
         const std::optional<std::string> flags_c_opt{ rez::GetEnvironmentVariable("CFLAGS") };
 
         if (flags_c_opt.has_value()) {
-            const std::string flags{ *flags_c_opt };
+            const std::string &flags = *flags_c_opt;
 
             if (!flags.empty()) {
                 flags_c = flags;

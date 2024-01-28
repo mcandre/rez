@@ -49,9 +49,7 @@ _-----`  |(,__,__/__/_ .
 
     std::sample(quotes.begin(), quotes.end(), std::back_inserter(quote), 1, std::mt19937{ std::random_device{}() });
 
-    std::cout << replicant << std::endl
-              << std::endl
-              << quote.front() << std::endl
-              << std::endl;
+    std::cout << replicant << "\n\n"
+              << quote.front() << "\n\n";
     return EXIT_SUCCESS;
 }
