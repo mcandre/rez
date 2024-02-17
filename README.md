@@ -97,6 +97,7 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 * [Rake](https://ruby.github.io/rake/), a task runner for Ruby projects
 * [Rebar3](https://www.rebar3.org/), a build system for Erlang projects
 * Not to be confused with [Rezz](http://officialrezz.com/), the DJ
+* Also not to be confused with [Rez](http://preserve.mactech.com/articles/mactech/Vol.14/14.09/RezIsYourFriend/index.html), the classic Macintosh resource compiler.
 * [sail](https://github.com/mcandre/sail), a fast C/C++ source file identifier
 * [sbt](https://www.scala-sbt.org/index.html), a build system for Scala projects
 * [Shake](https://shakebuild.com/), a preiminent Haskell task runner
