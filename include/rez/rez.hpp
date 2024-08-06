@@ -94,7 +94,7 @@ constexpr char ArchitectureMsvcAmd64[]{ "x64" };
 /**
  * @brief Lang denotes a programming language.
  */
-enum class Lang {
+enum class Lang : std::uint8_t {
     /**
      * @brief Cpp denotes C++, object oriented C.
      */
@@ -233,7 +233,7 @@ struct Config {
      * * "c++ -o .rez/bin/rez rez.cpp"s
      * * R"(cl rez.cpp /link /out:.rez\bin\rez.exe)"s
      */
-    std::string build_command{};
+    std::string build_command;
 
     /**
      * @brief ApplyMSVCToolchain loads MSVC environment variables for cl into the current process.

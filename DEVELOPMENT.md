@@ -2,6 +2,7 @@
 
 * [clang++](https://clang.llvm.org/) 14+ or [g++](https://gcc.gnu.org/) 12+
 * [cmake](https://cmake.org/) 3.8+
+* [cppcheck](https://cppcheck.sourceforge.io/) 2.10+
 * [Docker](https://www.docker.com/) 20.10.12+
 * [Doxygen](https://www.doxygen.nl/index.html) 9.4+
 * [Docker](https://www.docker.com/) 20.10.12+

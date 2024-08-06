@@ -89,7 +89,7 @@ int main(int argc, const char **argv) {
     }
 
     const bool artifact_cache_miss = !std::filesystem::exists(config.artifact_file_path) ||
-                               std::filesystem::last_write_time(config.artifact_file_path) < std::filesystem::last_write_time(config.task_definition_path);
+                                     std::filesystem::last_write_time(config.artifact_file_path) < std::filesystem::last_write_time(config.task_definition_path);
 
     if (artifact_cache_miss) {
         std::filesystem::create_directories(config.artifact_dir_path);

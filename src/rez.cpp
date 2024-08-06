@@ -240,8 +240,7 @@ void Config::Load() {
         }
     }
 
-    std::string flags_cxx,
-        flags_c;
+    std::string flags_cxx, flags_c;
 
     if (task_definition_lang == Lang::Cpp) {
         const std::optional<std::string> flags_cxx_opt{ rez::GetEnvironmentVariable("CXXFLAGS") };
