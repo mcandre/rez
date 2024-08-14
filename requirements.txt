@@ -1,3 +1,2 @@
 cpplint>=1.6.1,<2.0
-safety
 yamllint>=1.11.1,<2.0

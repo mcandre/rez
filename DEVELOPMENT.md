@@ -7,6 +7,7 @@
 * [Doxygen](https://www.doxygen.nl/index.html) 9.4+
 * [Docker](https://www.docker.com/) 20.10.12+
 * POSIX compatible [make](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html)
+* [Node.js](https://nodejs.org/en/) 20.10.0+
 * [Python](https://www.python.org/) 3.12.1+
 * [Rust](https://www.rust-lang.org/en-US/) 1.75.0+
 * [snek](https://github.com/mcandre/snek) 0.0.5
