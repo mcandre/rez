@@ -79,6 +79,7 @@ For information about developing rez itself, see [DEVELOPMENT.md](DEVELOPMENT.md
 
 * [batsch](https://batsh.org/), a preprocessing language that compiles to bash and MS-DOS bat files (somewhat defunct)
 * [beltaloada](https://github.com/mcandre/beltaloada), a guide to writing build systems for (POSIX) sh
+* [booty](https://github.com/mcandre/booty?tab=readme-ov-file) for JS/Node.js/altJS
 * [cling](https://root.cern/cling/), a C++ interpreter
 * [cmake](https://cmake.org/), a preiminent cross-platform build system
 * [dale](https://github.com/mcandre/dale), a D task runner
