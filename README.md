@@ -61,15 +61,13 @@ BSD-2-Clause
 
 # RUNTIME REQUIREMENTS
 
-* a C/C++ compiler
-
-rez is regularly tested for cross-platform support on Linux, macOS, and Windows.
+* a [C](https://www.c-language.org/)/[C++](https://isocpp.org/) compiler
 
 ## Recommended
 
 * [direnv](https://direnv.net/) / [posh-direnv](https://github.com/takekazuomi/posh-direnv)
 * [cmake](https://cmake.org/) 3+
-* [make](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html) or [ninja](https://ninja-build.org/)
+* [POSIX](https://pubs.opengroup.org/onlinepubs/9799919799/) compatible [make](https://en.wikipedia.org/wiki/Make_(software)), or [ninja](https://ninja-build.org/)
 
 # CONTRIBUTING
 
